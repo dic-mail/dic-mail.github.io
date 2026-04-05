@@ -1,0 +1,591 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; }
+
+.app { max-width: 960px; margin: 0 auto; padding: 1rem; }
+
+.header { 
+  border-bottom: 0.5px solid var(--color-border-tertiary); 
+  padding-bottom: 1rem; margin-bottom: 1.5rem;
+  display: flex; align-items: baseline; gap: 16px;
+}
+.logo { font-size: 22px; font-weight: 500; letter-spacing: -0.5px; color: var(--color-text-primary); }
+.logo span { color: var(--color-text-secondary); font-size: 13px; font-weight: 400; margin-left: 8px; }
+.tag { font-size: 11px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 2px 8px; color: var(--color-text-secondary); }
+
+.tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; }
+.tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--color-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: all 0.15s; font-family: 'Courier New', monospace; }
+.tab.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); }
+.tab:hover { color: var(--color-text-primary); }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.section-label { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+
+.form-row { margin-bottom: 12px; }
+.form-row label { font-size: 12px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+.form-row input, .form-row textarea, .form-row select { width: 100%; font-family: 'Courier New', monospace; font-size: 13px; }
+.form-row textarea { min-height: 80px; resize: vertical; }
+
+.btn { font-family: 'Courier New', monospace; font-size: 13px; padding: 8px 16px; border-radius: var(--border-radius-md); cursor: pointer; transition: all 0.15s; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); }
+.btn:hover { background: var(--color-background-secondary); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.btn-primary:hover { opacity: 0.85; }
+.btn-danger { border-color: var(--color-border-danger); color: var(--color-text-danger); }
+.btn-danger:hover { background: var(--color-background-danger); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+
+.character-card { 
+  background: var(--color-background-primary); 
+  border: 0.5px solid var(--color-border-tertiary); 
+  border-radius: var(--border-radius-lg); 
+  padding: 1rem; margin-bottom: 0.75rem;
+}
+.char-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; }
+.char-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.char-email { font-size: 12px; color: var(--color-text-secondary); }
+.chain-count { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; }
+
+.chain-list { margin-top: 8px; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 8px; }
+.chain-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.chain-num { color: var(--color-text-tertiary); min-width: 16px; }
+.chain-trigger { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 11px; color: var(--color-text-secondary); }
+.chain-arrow { color: var(--color-text-tertiary); }
+.chain-preview { color: var(--color-text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.badge { font-size: 11px; padding: 2px 6px; border-radius: var(--border-radius-md); border: 0.5px solid; }
+.badge-active { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+.badge-inactive { background: var(--color-background-secondary); border-color: var(--color-border-secondary); color: var(--color-text-secondary); }
+
+.sim-inbox { }
+.email-item { 
+  display: flex; align-items: flex-start; gap: 12px; 
+  padding: 10px 0; 
+  border-bottom: 0.5px solid var(--color-border-tertiary); 
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.email-item:hover { background: var(--color-background-secondary); margin: 0 -12px; padding: 10px 12px; border-radius: var(--border-radius-md); }
+.email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-primary); margin-top: 5px; flex-shrink: 0; }
+.email-dot.read { background: transparent; border: 0.5px solid var(--color-border-secondary); }
+.email-from { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.email-subject { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.email-preview { font-size: 11px; color: var(--color-text-tertiary); }
+.email-time { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; white-space: nowrap; }
+
+.email-compose { margin-top: 1rem; }
+.compose-header { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.compose-to { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.to-addr { font-family: 'Courier New', monospace; font-size: 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: 4px; padding: 2px 8px; color: var(--color-text-secondary); }
+.hint-bar { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.hint-bar code { font-family: 'Courier New', monospace; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem; max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto; margin: 1rem; }
+.modal h2 { font-size: 16px; font-weight: 500; margin-bottom: 1rem; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; }
+
+.log { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 11px; font-family: 'Courier New', monospace; color: var(--color-text-secondary); max-height: 200px; overflow-y: auto; }
+.log-entry { margin-bottom: 4px; }
+.log-entry.incoming { color: var(--color-text-success); }
+.log-entry.outgoing { color: var(--color-text-info); }
+.log-entry.system { color: var(--color-text-tertiary); }
+
+.empty-state { text-align: center; padding: 2rem; color: var(--color-text-tertiary); font-size: 13px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.flex-gap { display: flex; gap: 8px; align-items: center; }
+
+.notif { position: fixed; top: 1rem; right: 1rem; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 10px 16px; font-size: 13px; z-index: 200; box-shadow: none; opacity: 0; transition: opacity 0.2s; max-width: 280px; }
+.notif.show { opacity: 1; }
+.notif.success { border-color: var(--color-border-success); color: var(--color-text-success); }
+.notif.error { border-color: var(--color-border-danger); color: var(--color-text-danger); }
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="logo">DIC-mail <span>ARG メール連鎖システム</span></div>
+    <div class="tag">v1.0</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('characters')">キャラクター</button>
+    <button class="tab" onclick="switchTab('simulator')">シミュレーター</button>
+    <button class="tab" onclick="switchTab('log')">送受信ログ</button>
+    <button class="tab" onclick="switchTab('export')">設定エクスポート</button>
+  </div>
+
+  <!-- キャラクタータブ -->
+  <div id="panel-characters" class="panel active">
+    <div class="flex-between">
+      <div class="section-label">登録キャラクター</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddCharModal()">+ キャラクター追加</button>
+    </div>
+    <div id="char-list"></div>
+  </div>
+
+  <!-- シミュレータータブ -->
+  <div id="panel-simulator" class="panel">
+    <div class="grid2">
+      <div>
+        <div class="section-label">受信トレイ（プレイヤー視点）</div>
+        <div class="card" style="min-height: 200px;">
+          <div id="sim-inbox"></div>
+        </div>
+        <div class="email-compose card">
+          <div class="compose-header">メールを送信</div>
+          <div class="form-row">
+            <label>宛先</label>
+            <select id="sim-to" onchange="updateHint()" style="font-family: 'Courier New', monospace; font-size: 13px; width: 100%;">
+              <option value="">-- 送信先を選択 --</option>
+            </select>
+          </div>
+          <div id="sim-hint" class="hint-bar" style="display:none;"></div>
+          <div class="form-row">
+            <label>本文</label>
+            <textarea id="sim-body" placeholder="ここにメッセージを入力..." style="min-height: 60px;"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="sendSimEmail()">送信 →</button>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">現在のチェーン状態</div>
+        <div id="chain-state" class="card"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ログタブ -->
+  <div id="panel-log" class="panel">
+    <div class="flex-between">
+      <div class="section-label">送受信ログ</div>
+      <button class="btn btn-sm" onclick="clearLog()">ログをクリア</button>
+    </div>
+    <div class="log" id="main-log">
+      <div class="log-entry system">[system] DIC-mail システム起動</div>
+    </div>
+  </div>
+
+  <!-- エクスポートタブ -->
+  <div id="panel-export" class="panel">
+    <div class="section-label">JSON設定</div>
+    <div class="card">
+      <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">この設定JSONをバックエンド実装に渡すことで、実際のメールサーバーと連携できます。</p>
+      <textarea id="export-json" style="width: 100%; min-height: 300px; font-family: 'Courier New', monospace; font-size: 11px;" readonly></textarea>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <button class="btn btn-sm" onclick="copyExport()">コピー</button>
+        <button class="btn btn-sm" onclick="refreshExport()">更新</button>
+      </div>
+    </div>
+    <div class="section-label" style="margin-top: 1rem;">バックエンド連携メモ</div>
+    <div class="card">
+      <p style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">
+        実際の運用では、IMAPで受信メールを監視し、<br>
+        宛先メールアドレス → キャラクターを特定<br>
+        → 本文にトリガーワードが含まれるか確認<br>
+        → 対応するレスポンスをSMTPで自動返信<br>
+        という流れで実装します。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- キャラクター追加/編集モーダル -->
+<div class="modal-backdrop" id="char-modal">
+  <div class="modal">
+    <h2 id="modal-title">キャラクターを追加</h2>
+    <div class="form-row">
+      <label>キャラクター名</label>
+      <input type="text" id="m-name" placeholder="例: 謎の研究者 田中" />
+    </div>
+    <div class="form-row">
+      <label>メールアドレス</label>
+      <input type="email" id="m-email" placeholder="例: tanaka@dic-research.jp" />
+    </div>
+    <div class="form-row">
+      <label>初回自動返信メッセージ（最初にメールを受け取った時）</label>
+      <textarea id="m-intro" placeholder="例: あなたはどこでこのアドレスを..."></textarea>
+    </div>
+    <div style="border-top: 0.5px solid var(--color-border-tertiary); padding-top: 1rem; margin-top: 0.5rem;">
+      <div class="flex-between" style="margin-bottom: 8px;">
+        <div class="section-label" style="margin-bottom: 0;">メール連鎖チェーン</div>
+        <button class="btn btn-sm" onclick="addChainRow()">+ チェーン追加</button>
+      </div>
+      <div id="chain-rows"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeCharModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveCharacter()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- メール詳細モーダル -->
+<div class="modal-backdrop" id="email-modal">
+  <div class="modal">
+    <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 4px;" id="email-modal-from"></div>
+    <div style="font-size: 16px; font-weight: 500; margin-bottom: 12px;" id="email-modal-subject"></div>
+    <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; white-space: pre-wrap; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 12px;" id="email-modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeEmailModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+let characters = [
+  {
+    id: 1,
+    name: '謎の研究者 田中',
+    email: 'tanaka@dic-research.jp',
+    active: true,
+    intro: 'このアドレスをどこで手に入れた？\n\n…まあいい。私の名前は田中。DIC研究所で働いていた——"いた"というのがポイントだ。\n\nもし本当に知りたいなら、「PROTOCOL」という言葉を送ってみろ。',
+    chains: [
+      { trigger: 'PROTOCOL', response: 'プロトコル7か…よく知っている。\n\nあの事件は公式には"実験の失敗"とされている。だが私が見たものは違った。\n\n次のヒントが欲しければ「ARCHIVE」と送れ。場所を教えよう。' },
+      { trigger: 'ARCHIVE', response: '座標は 35.6762° N, 139.6503° E\n\nそこに古い倉庫がある。扉の暗証番号は…\n\n待て、誰かが来た。「EMERGENCY」と送れ。急げ。' },
+      { trigger: 'EMERGENCY', response: '…無事だ。だが時間がない。\n\n最後のファイルは "DIC_FINAL.enc" だ。パスワードは我々が最初にやり取りした言葉を全部つなげたもの。\n\nもう連絡できない。頑張れ。' }
+    ]
+  }
+];
+
+let editingId = null;
+let chainRows = [];
+let simInbox = [];
+let simChainState = {};
+let logEntries = [];
+let emailCounter = 0;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`panel-${name}`).classList.add('active');
+  if (name === 'simulator') updateSimulator();
+  if (name === 'export') refreshExport();
+}
+
+function initials(name) {
+  return name.split('').filter(c => c.match(/[A-Za-z\u3040-\u9FAF]/)).slice(0, 2).join('').toUpperCase() || name.slice(0, 2);
+}
+
+function renderCharList() {
+  const el = document.getElementById('char-list');
+  if (!characters.length) {
+    el.innerHTML = '<div class="empty-state">キャラクターがいません。追加してください。</div>';
+    return;
+  }
+  el.innerHTML = characters.map(c => `
+    <div class="character-card">
+      <div class="char-header">
+        <div class="avatar">${initials(c.name)}</div>
+        <div>
+          <div class="char-name">${c.name}</div>
+          <div class="char-email">${c.email}</div>
+        </div>
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+          <span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? '有効' : '無効'}</span>
+          <button class="btn btn-sm" onclick="editChar(${c.id})">編集</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteChar(${c.id})">削除</button>
+        </div>
+      </div>
+      <div class="chain-list">
+        <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 6px;">連鎖チェーン (${c.chains.length}件)</div>
+        ${c.intro ? `<div class="chain-item"><span class="chain-num">0</span><span class="chain-trigger">初回</span><span class="chain-arrow">→</span><span class="chain-preview">${c.intro.slice(0,50)}...</span></div>` : ''}
+        ${c.chains.map((ch, i) => `
+          <div class="chain-item">
+            <span class="chain-num">${i+1}</span>
+            <span class="chain-trigger">${ch.trigger}</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-preview">${ch.response.slice(0,50)}...</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddCharModal() {
+  editingId = null;
+  chainRows = [{ trigger: '', response: '' }];
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-email').value = '';
+  document.getElementById('m-intro').value = '';
+  document.getElementById('modal-title').textContent = 'キャラクターを追加';
+  renderChainRows();
+  document.getElementById('char-modal').classList.add('open');
+}
+
+function editChar(id) {
+  const c = characters.find(x => x.id === id);
+  if (!c) return;
+  editingId = id;
+  chainRows = c.chains.map(ch => ({...ch}));
+  document.getElementById('m-name').value = c.name;
+  document.getElementById('m-email').value = c.email;
+  document.getElementById('m-intro').value = c.intro || '';
+  document.getElementById('modal-title').textContent = 'キャラクターを編集';
+  renderChainRows();
+  document.getElementById('char-modal').classList.add('open');
+}
+
+function deleteChar(id) {
+  if (!confirm('このキャラクターを削除しますか？')) return;
+  characters = characters.filter(c => c.id !== id);
+  renderCharList();
+  showNotif('キャラクターを削除しました');
+}
+
+function closeCharModal() {
+  document.getElementById('char-modal').classList.remove('open');
+}
+
+function addChainRow() {
+  chainRows.push({ trigger: '', response: '' });
+  renderChainRows();
+}
+
+function renderChainRows() {
+  const el = document.getElementById('chain-rows');
+  el.innerHTML = chainRows.map((r, i) => `
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px; margin-bottom: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 11px; color: var(--color-text-tertiary);">チェーン ${i+1}</span>
+        <button class="btn btn-sm btn-danger" onclick="removeChainRow(${i})">削除</button>
+      </div>
+      <div class="form-row">
+        <label>トリガーワード（含まれていたら反応）</label>
+        <input type="text" value="${r.trigger}" oninput="chainRows[${i}].trigger=this.value" placeholder="例: PROTOCOL" style="font-family: 'Courier New', monospace;" />
+      </div>
+      <div class="form-row" style="margin-bottom: 0;">
+        <label>返信メッセージ</label>
+        <textarea oninput="chainRows[${i}].response=this.value" style="min-height: 60px;">${r.response}</textarea>
+      </div>
+    </div>
+  `).join('') || '<div style="font-size: 12px; color: var(--color-text-tertiary); padding: 8px 0;">チェーンがありません</div>';
+}
+
+function removeChainRow(i) {
+  chainRows.splice(i, 1);
+  renderChainRows();
+}
+
+function saveCharacter() {
+  const name = document.getElementById('m-name').value.trim();
+  const email = document.getElementById('m-email').value.trim();
+  const intro = document.getElementById('m-intro').value.trim();
+  if (!name || !email) { showNotif('名前とメールアドレスは必須です', 'error'); return; }
+  const chains = chainRows.filter(r => r.trigger.trim() && r.response.trim());
+  
+  if (editingId) {
+    const idx = characters.findIndex(c => c.id === editingId);
+    characters[idx] = { ...characters[idx], name, email, intro, chains };
+  } else {
+    characters.push({ id: Date.now(), name, email, active: true, intro, chains });
+  }
+  closeCharModal();
+  renderCharList();
+  showNotif(editingId ? 'キャラクターを更新しました' : 'キャラクターを追加しました', 'success');
+}
+
+function updateSimulator() {
+  const sel = document.getElementById('sim-to');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">-- 送信先を選択 --</option>' + 
+    characters.map(c => `<option value="${c.id}" ${c.id==cur?'selected':''}>${c.name} &lt;${c.email}&gt;</option>`).join('');
+  renderSimInbox();
+  renderChainState();
+  updateHint();
+}
+
+function updateHint() {
+  const charId = parseInt(document.getElementById('sim-to').value);
+  const hint = document.getElementById('sim-hint');
+  if (!charId) { hint.style.display = 'none'; return; }
+  const c = characters.find(x => x.id === charId);
+  if (!c) return;
+  const state = simChainState[charId] || { contacted: false, step: -1 };
+  if (!state.contacted) {
+    hint.style.display = 'block';
+    hint.textContent = '初回メール — 何か送るとキャラクターから返信が来ます';
+  } else if (c.chains[state.step + 1]) {
+    hint.style.display = 'block';
+    hint.innerHTML = `次のトリガーワードを本文に含めてください: <code>${c.chains[state.step + 1].trigger}</code>`;
+  } else {
+    hint.style.display = 'block';
+    hint.textContent = 'このキャラクターの連鎖は終了しました';
+  }
+}
+
+function sendSimEmail() {
+  const charId = parseInt(document.getElementById('sim-to').value);
+  const body = document.getElementById('sim-body').value.trim();
+  if (!charId) { showNotif('送信先を選択してください', 'error'); return; }
+  if (!body) { showNotif('本文を入力してください', 'error'); return; }
+  const c = characters.find(x => x.id === charId);
+  if (!c) return;
+
+  if (!simChainState[charId]) simChainState[charId] = { contacted: false, step: -1 };
+  const state = simChainState[charId];
+
+  addLog('outgoing', `→ ${c.email}: ${body.slice(0, 40)}...`);
+
+  let responseText = null;
+  if (!state.contacted) {
+    state.contacted = true;
+    responseText = c.intro || `${c.name}からの返信: メールを受け取りました。`;
+    addLog('incoming', `← ${c.email}: 初回返信`);
+  } else {
+    const nextChain = c.chains[state.step + 1];
+    if (nextChain) {
+      if (body.toUpperCase().includes(nextChain.trigger.toUpperCase())) {
+        state.step++;
+        responseText = nextChain.response;
+        addLog('incoming', `← ${c.email}: トリガー[${nextChain.trigger}]ヒット → チェーン${state.step+1}返信`);
+      } else {
+        addLog('system', `[no-match] トリガー[${nextChain.trigger}]が見つかりません`);
+        showNotif(`トリガーワードが見つかりません`, 'error');
+      }
+    } else {
+      addLog('system', `[end] ${c.name}のチェーン終了`);
+      showNotif('このキャラクターの連鎖は終了しています');
+    }
+  }
+
+  if (responseText) {
+    emailCounter++;
+    const now = new Date();
+    simInbox.unshift({
+      id: emailCounter,
+      from: c.name,
+      fromEmail: c.email,
+      subject: `Re: ARG連絡 (チェーン${state.step+1})`,
+      body: responseText,
+      time: `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`,
+      read: false
+    });
+    document.getElementById('sim-body').value = '';
+    renderSimInbox();
+    renderChainState();
+    updateHint();
+    showNotif(`${c.name}から返信が来ました`, 'success');
+  }
+}
+
+function renderSimInbox() {
+  const el = document.getElementById('sim-inbox');
+  if (!simInbox.length) {
+    el.innerHTML = '<div class="empty-state">受信メールはありません</div>';
+    return;
+  }
+  el.innerHTML = simInbox.map(m => `
+    <div class="email-item" onclick="openEmail(${m.id})">
+      <div class="email-dot ${m.read ? 'read' : ''}"></div>
+      <div style="flex: 1; min-width: 0;">
+        <div class="email-from">${m.from}</div>
+        <div class="email-subject">${m.subject}</div>
+        <div class="email-preview">${m.body.slice(0,60).replace(/\n/g,' ')}...</div>
+      </div>
+      <div class="email-time">${m.time}</div>
+    </div>
+  `).join('');
+}
+
+function openEmail(id) {
+  const m = simInbox.find(x => x.id === id);
+  if (!m) return;
+  m.read = true;
+  renderSimInbox();
+  document.getElementById('email-modal-from').textContent = `${m.from} <${m.fromEmail}>`;
+  document.getElementById('email-modal-subject').textContent = m.subject;
+  document.getElementById('email-modal-body').textContent = m.body;
+  document.getElementById('email-modal').classList.add('open');
+}
+
+function closeEmailModal() {
+  document.getElementById('email-modal').classList.remove('open');
+}
+
+function renderChainState() {
+  const el = document.getElementById('chain-state');
+  if (!characters.length) { el.innerHTML = '<div class="empty-state">キャラクターがいません</div>'; return; }
+  el.innerHTML = characters.map(c => {
+    const state = simChainState[c.id] || { contacted: false, step: -1 };
+    const total = c.chains.length;
+    const done = state.step + 1;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    return `
+      <div style="margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 13px; font-weight: 500;">${c.name}</span>
+          <span style="font-size: 11px; color: var(--color-text-tertiary);">${state.contacted ? `${done}/${total}` : '未接触'}</span>
+        </div>
+        <div style="height: 4px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden;">
+          <div style="height: 100%; width: ${state.contacted ? Math.max(5,pct) : 0}%; background: var(--color-text-primary); border-radius: 2px; transition: width 0.3s;"></div>
+        </div>
+        <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px;">
+          ${!state.contacted ? '未接触' : done === total ? '完了' : `次: ${c.chains[done]?.trigger || '-'}`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addLog(type, text) {
+  const el = document.getElementById('main-log');
+  const now = new Date();
+  const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  const div = document.createElement('div');
+  div.className = `log-entry ${type}`;
+  div.textContent = `[${ts}] ${text}`;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog() {
+  const el = document.getElementById('main-log');
+  el.innerHTML = '<div class="log-entry system">[system] ログをクリアしました</div>';
+}
+
+function refreshExport() {
+  document.getElementById('export-json').value = JSON.stringify({ 
+    version: '1.0',
+    system: 'DIC-mail',
+    characters: characters.map(c => ({
+      id: c.id,
+      name: c.name,
+      email: c.email,
+      active: c.active,
+      intro_response: c.intro,
+      chains: c.chains
+    }))
+  }, null, 2);
+}
+
+function copyExport() {
+  const el = document.getElementById('export-json');
+  navigator.clipboard.writeText(el.value).then(() => showNotif('コピーしました', 'success'));
+}
+
+function showNotif(msg, type = 'info') {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = `notif ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+document.getElementById('char-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCharModal(); });
+document.getElementById('email-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeEmailModal(); });
+
+renderCharList();
+updateSimulator();
+</script>
