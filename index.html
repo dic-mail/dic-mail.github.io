@@ -1,591 +1,531 @@
 
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Courier New', monospace; }
-
-.app { max-width: 960px; margin: 0 auto; padding: 1rem; }
-
-.header { 
-  border-bottom: 0.5px solid var(--color-border-tertiary); 
-  padding-bottom: 1rem; margin-bottom: 1.5rem;
-  display: flex; align-items: baseline; gap: 16px;
-}
-.logo { font-size: 22px; font-weight: 500; letter-spacing: -0.5px; color: var(--color-text-primary); }
-.logo span { color: var(--color-text-secondary); font-size: 13px; font-weight: 400; margin-left: 8px; }
-.tag { font-size: 11px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 2px 8px; color: var(--color-text-secondary); }
-
-.tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; }
-.tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border: none; background: none; color: var(--color-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: all 0.15s; font-family: 'Courier New', monospace; }
-.tab.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); }
-.tab:hover { color: var(--color-text-primary); }
-
-.panel { display: none; }
-.panel.active { display: block; }
-
-.section-label { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-
-.form-row { margin-bottom: 12px; }
-.form-row label { font-size: 12px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
-.form-row input, .form-row textarea, .form-row select { width: 100%; font-family: 'Courier New', monospace; font-size: 13px; }
-.form-row textarea { min-height: 80px; resize: vertical; }
-
-.btn { font-family: 'Courier New', monospace; font-size: 13px; padding: 8px 16px; border-radius: var(--border-radius-md); cursor: pointer; transition: all 0.15s; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); }
-.btn:hover { background: var(--color-background-secondary); }
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
-.btn-primary:hover { opacity: 0.85; }
-.btn-danger { border-color: var(--color-border-danger); color: var(--color-text-danger); }
-.btn-danger:hover { background: var(--color-background-danger); }
-.btn-sm { padding: 4px 10px; font-size: 12px; }
-
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
-
-.character-card { 
-  background: var(--color-background-primary); 
-  border: 0.5px solid var(--color-border-tertiary); 
-  border-radius: var(--border-radius-lg); 
-  padding: 1rem; margin-bottom: 0.75rem;
-}
-.char-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; }
-.char-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
-.char-email { font-size: 12px; color: var(--color-text-secondary); }
-.chain-count { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; }
-
-.chain-list { margin-top: 8px; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 8px; }
-.chain-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; font-size: 12px; }
-.chain-num { color: var(--color-text-tertiary); min-width: 16px; }
-.chain-trigger { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 11px; color: var(--color-text-secondary); }
-.chain-arrow { color: var(--color-text-tertiary); }
-.chain-preview { color: var(--color-text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.badge { font-size: 11px; padding: 2px 6px; border-radius: var(--border-radius-md); border: 0.5px solid; }
-.badge-active { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
-.badge-inactive { background: var(--color-background-secondary); border-color: var(--color-border-secondary); color: var(--color-text-secondary); }
-
-.sim-inbox { }
-.email-item { 
-  display: flex; align-items: flex-start; gap: 12px; 
-  padding: 10px 0; 
-  border-bottom: 0.5px solid var(--color-border-tertiary); 
-  cursor: pointer;
-  transition: background 0.1s;
-}
-.email-item:hover { background: var(--color-background-secondary); margin: 0 -12px; padding: 10px 12px; border-radius: var(--border-radius-md); }
-.email-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-primary); margin-top: 5px; flex-shrink: 0; }
-.email-dot.read { background: transparent; border: 0.5px solid var(--color-border-secondary); }
-.email-from { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
-.email-subject { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 2px; }
-.email-preview { font-size: 11px; color: var(--color-text-tertiary); }
-.email-time { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; white-space: nowrap; }
-
-.email-compose { margin-top: 1rem; }
-.compose-header { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
-.compose-to { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.to-addr { font-family: 'Courier New', monospace; font-size: 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: 4px; padding: 2px 8px; color: var(--color-text-secondary); }
-.hint-bar { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
-.hint-bar code { font-family: 'Courier New', monospace; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); padding: 1px 4px; border-radius: 3px; font-size: 11px; }
-
-.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; }
-.modal-backdrop.open { display: flex; }
-.modal { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem; max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto; margin: 1rem; }
-.modal h2 { font-size: 16px; font-weight: 500; margin-bottom: 1rem; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; }
-
-.log { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 11px; font-family: 'Courier New', monospace; color: var(--color-text-secondary); max-height: 200px; overflow-y: auto; }
-.log-entry { margin-bottom: 4px; }
-.log-entry.incoming { color: var(--color-text-success); }
-.log-entry.outgoing { color: var(--color-text-info); }
-.log-entry.system { color: var(--color-text-tertiary); }
-
-.empty-state { text-align: center; padding: 2rem; color: var(--color-text-tertiary); font-size: 13px; }
-.flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.flex-gap { display: flex; gap: 8px; align-items: center; }
-
-.notif { position: fixed; top: 1rem; right: 1rem; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 10px 16px; font-size: 13px; z-index: 200; box-shadow: none; opacity: 0; transition: opacity 0.2s; max-width: 280px; }
-.notif.show { opacity: 1; }
-.notif.success { border-color: var(--color-border-success); color: var(--color-text-success); }
-.notif.error { border-color: var(--color-border-danger); color: var(--color-text-danger); }
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{display:flex;height:680px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary);font-size:13px}
+.sidebar{width:200px;flex-shrink:0;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;background:var(--color-background-secondary)}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.logo-text{font-size:15px;font-weight:500;letter-spacing:0.5px;color:var(--color-text-primary)}
+.logo-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.compose-btn{margin:12px 12px 0;padding:8px 12px;background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;text-align:center}
+.compose-btn:hover{opacity:0.85}
+.nav-section{padding:12px 0 0}
+.nav-label{font-size:10px;color:var(--color-text-tertiary);padding:0 16px 6px;letter-spacing:0.5px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;color:var(--color-text-secondary);font-size:12px;border-left:2px solid transparent;transition:all 0.1s}
+.nav-item:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.nav-item.active{background:var(--color-background-primary);color:var(--color-text-primary);border-left-color:var(--color-text-primary);border-radius:0}
+.nav-icon{width:14px;height:14px;opacity:0.6;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--color-text-primary);color:var(--color-background-primary);font-size:10px;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center}
+.char-section{margin-top:auto;border-top:0.5px solid var(--color-border-tertiary);padding:12px}
+.char-label{font-size:10px;color:var(--color-text-tertiary);margin-bottom:8px}
+.char-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
+.char-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.char-dot.online{background:#4caf50}
+.char-dot.offline{background:var(--color-border-secondary)}
+.char-name{font-size:11px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.toolbar-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.search-box{padding:5px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:12px;width:160px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.content{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.mail-list{flex:1}
+.mail-row{display:flex;align-items:stretch;padding:0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background 0.1s}
+.mail-row:hover{background:var(--color-background-secondary)}
+.mail-row.selected{background:var(--color-background-info)}
+.mail-row.unread .mail-sender{font-weight:500;color:var(--color-text-primary)}
+.unread-dot{width:3px;background:var(--color-text-primary);flex-shrink:0;align-self:stretch}
+.mail-row:not(.unread) .unread-dot{background:transparent}
+.mail-inner{display:flex;flex-direction:column;padding:10px 14px;flex:1;min-width:0}
+.mail-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.mail-sender{font-size:12px;color:var(--color-text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-time{font-size:11px;color:var(--color-text-tertiary);flex-shrink:0}
+.mail-subject{font-size:12px;color:var(--color-text-primary);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-preview{font-size:11px;color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.viewer{display:none;flex-direction:column;height:100%}
+.viewer.open{display:flex}
+.viewer-header{padding:16px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
+.viewer-back{font-size:12px;color:var(--color-text-secondary);cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;gap:4px}
+.viewer-back:hover{color:var(--color-text-primary)}
+.viewer-subject{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.viewer-meta{font-size:11px;color:var(--color-text-tertiary)}
+.viewer-body{flex:1;overflow-y:auto;padding:20px 16px;font-size:13px;color:var(--color-text-secondary);line-height:1.8;white-space:pre-wrap}
+.viewer-reply{padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary);flex-shrink:0}
+.reply-hint{font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px}
+.reply-row{display:flex;gap:8px}
+.reply-input{flex:1;padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:12px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.reply-send{padding:7px 14px;background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;flex-shrink:0}
+.reply-send:hover{opacity:0.85}
+.compose-panel{display:none;flex-direction:column;height:100%}
+.compose-panel.open{display:flex}
+.compose-header{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.compose-title{font-size:14px;font-weight:500;flex:1}
+.compose-cancel{font-size:12px;color:var(--color-text-secondary);cursor:pointer}
+.compose-cancel:hover{color:var(--color-text-primary)}
+.compose-fields{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
+.compose-field{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.compose-field:last-child{border-bottom:none}
+.field-label{font-size:11px;color:var(--color-text-tertiary);width:28px;flex-shrink:0}
+.field-input{flex:1;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none}
+.compose-body-area{flex:1;padding:14px 16px;overflow-y:auto}
+.compose-body-area textarea{width:100%;height:100%;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none;resize:none;line-height:1.7;min-height:200px}
+.compose-footer{padding:10px 16px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;flex-shrink:0}
+.toast{position:absolute;bottom:20px;right:20px;padding:8px 14px;background:var(--color-text-primary);color:var(--color-background-primary);border-radius:var(--border-radius-md);font-size:12px;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.toast.show{opacity:1}
+.chain-badge{font-size:10px;padding:2px 6px;border-radius:3px;background:#e8f5e9;color:#2e7d32;border:0.5px solid #a5d6a7;flex-shrink:0}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--color-text-tertiary);font-size:13px;gap:8px}
+.empty-icon{width:32px;height:32px;opacity:0.3}
+.admin-panel{display:none;flex-direction:column;height:100%;overflow-y:auto}
+.admin-panel.open{display:flex}
+.admin-section{padding:16px}
+.admin-section h3{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary)}
+.admin-char{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;margin-bottom:8px}
+.admin-char-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.admin-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-secondary)}
+.admin-name{font-size:13px;font-weight:500}
+.admin-email{font-size:11px;color:var(--color-text-tertiary)}
+.chain-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px}
+.trigger-pill{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:3px;padding:2px 6px;font-family:monospace;color:var(--color-text-secondary)}
+.arrow-icon{color:var(--color-text-tertiary);font-size:10px}
+.form-mini{margin-bottom:8px}
+.form-mini label{font-size:11px;color:var(--color-text-tertiary);display:block;margin-bottom:3px}
+.form-mini input,.form-mini textarea,.form-mini select{width:100%;font-size:12px;padding:5px 8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary)}
+.form-mini textarea{min-height:60px;resize:vertical}
+.add-chain-btn{font-size:11px;color:var(--color-text-secondary);background:none;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 10px;cursor:pointer;width:100%;margin-top:4px}
+.add-chain-btn:hover{background:var(--color-background-secondary)}
+.btn-row{display:flex;gap:6px;margin-top:8px}
+.btn-sm{padding:5px 10px;font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)}
+.btn-sm:hover{background:var(--color-background-secondary)}
+.btn-sm.primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.btn-sm.primary:hover{opacity:0.85}
+.section-divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:12px 0}
+.relative{position:relative}
 </style>
 
-<div class="app">
-  <div class="header">
-    <div class="logo">DIC-mail <span>ARG メール連鎖システム</span></div>
-    <div class="tag">v1.0</div>
-  </div>
+<div class="wrap relative" id="app">
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('characters')">キャラクター</button>
-    <button class="tab" onclick="switchTab('simulator')">シミュレーター</button>
-    <button class="tab" onclick="switchTab('log')">送受信ログ</button>
-    <button class="tab" onclick="switchTab('export')">設定エクスポート</button>
-  </div>
-
-  <!-- キャラクタータブ -->
-  <div id="panel-characters" class="panel active">
-    <div class="flex-between">
-      <div class="section-label">登録キャラクター</div>
-      <button class="btn btn-primary btn-sm" onclick="openAddCharModal()">+ キャラクター追加</button>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">DIC-mail</div>
+      <div class="logo-sub">ARG メール連鎖システム</div>
     </div>
-    <div id="char-list"></div>
+    <button class="compose-btn" onclick="openCompose()">+ 作成</button>
+    <div class="nav-section">
+      <div class="nav-label">メールボックス</div>
+      <div class="nav-item active" id="nav-inbox" onclick="showView('inbox')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.2"/></svg>
+        受信トレイ
+        <span class="nav-badge" id="unread-badge">2</span>
+      </div>
+      <div class="nav-item" id="nav-sent" onclick="showView('sent')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M14 2L2 7l5 3 5-5-5 5 2 5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        送信済み
+      </div>
+      <div class="nav-item" id="nav-admin" onclick="showView('admin')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2"/></svg>
+        キャラクター管理
+      </div>
+    </div>
+    <div class="char-section">
+      <div class="char-label">登録キャラクター</div>
+      <div id="char-sidebar-list"></div>
+    </div>
   </div>
 
-  <!-- シミュレータータブ -->
-  <div id="panel-simulator" class="panel">
-    <div class="grid2">
-      <div>
-        <div class="section-label">受信トレイ（プレイヤー視点）</div>
-        <div class="card" style="min-height: 200px;">
-          <div id="sim-inbox"></div>
+  <div class="main">
+    <div class="toolbar">
+      <div class="toolbar-title" id="toolbar-title">受信トレイ</div>
+      <input class="search-box" type="text" placeholder="メールを検索..." oninput="filterMails(this.value)" />
+    </div>
+
+    <div class="content" id="content-area">
+
+      <div id="view-inbox" class="mail-list"></div>
+
+      <div id="view-sent" class="mail-list" style="display:none"></div>
+
+      <div id="view-viewer" class="viewer">
+        <div class="viewer-header">
+          <div class="viewer-back" onclick="backToList()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            戻る
+          </div>
+          <div class="viewer-subject" id="vSubject"></div>
+          <div class="viewer-meta" id="vMeta"></div>
         </div>
-        <div class="email-compose card">
-          <div class="compose-header">メールを送信</div>
-          <div class="form-row">
-            <label>宛先</label>
-            <select id="sim-to" onchange="updateHint()" style="font-family: 'Courier New', monospace; font-size: 13px; width: 100%;">
-              <option value="">-- 送信先を選択 --</option>
+        <div class="viewer-body" id="vBody"></div>
+        <div class="viewer-reply" id="vReplyArea">
+          <div class="reply-hint" id="vHint"></div>
+          <div class="reply-row">
+            <input class="reply-input" type="text" id="vReplyInput" placeholder="メッセージを入力..." />
+            <button class="reply-send" onclick="sendReply()">送信</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-compose" class="compose-panel">
+        <div class="compose-header">
+          <div class="compose-title">新規作成</div>
+          <div class="compose-cancel" onclick="cancelCompose()">キャンセル</div>
+        </div>
+        <div class="compose-fields">
+          <div class="compose-field">
+            <span class="field-label">宛先</span>
+            <select id="cTo" style="flex:1;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none">
+              <option value="">-- キャラクターを選択 --</option>
             </select>
           </div>
-          <div id="sim-hint" class="hint-bar" style="display:none;"></div>
-          <div class="form-row">
-            <label>本文</label>
-            <textarea id="sim-body" placeholder="ここにメッセージを入力..." style="min-height: 60px;"></textarea>
+          <div class="compose-field">
+            <span class="field-label">件名</span>
+            <input class="field-input" type="text" id="cSubject" placeholder="件名" />
           </div>
-          <button class="btn btn-primary" onclick="sendSimEmail()">送信 →</button>
+        </div>
+        <div class="compose-body-area">
+          <textarea id="cBody" placeholder="ここにメッセージを入力..."></textarea>
+        </div>
+        <div class="compose-footer">
+          <button class="btn-sm primary" onclick="sendNewMail()">送信</button>
+          <button class="btn-sm" onclick="cancelCompose()">破棄</button>
         </div>
       </div>
-      <div>
-        <div class="section-label">現在のチェーン状態</div>
-        <div id="chain-state" class="card"></div>
+
+      <div id="view-admin" class="admin-panel">
+        <div class="admin-section">
+          <h3>キャラクター一覧</h3>
+          <div id="admin-char-list"></div>
+          <button class="btn-sm primary" onclick="openAddChar()" style="margin-top:8px">+ キャラクター追加</button>
+          <hr class="section-divider">
+          <h3 id="admin-form-title">新規キャラクター</h3>
+          <div id="admin-form">
+            <div class="form-mini"><label>名前</label><input type="text" id="af-name" placeholder="例: 謎の研究者 田中" /></div>
+            <div class="form-mini"><label>メールアドレス</label><input type="email" id="af-email" placeholder="例: tanaka@dic.jp" /></div>
+            <div class="form-mini"><label>初回返信メッセージ</label><textarea id="af-intro" placeholder="初めてメールが来たときの返信..."></textarea></div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px;">連鎖チェーン</div>
+            <div id="af-chains"></div>
+            <button class="add-chain-btn" onclick="addChainField()">+ チェーンを追加</button>
+            <div class="btn-row">
+              <button class="btn-sm primary" onclick="saveChar()">保存</button>
+              <button class="btn-sm" onclick="cancelEdit()">キャンセル</button>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
-  <!-- ログタブ -->
-  <div id="panel-log" class="panel">
-    <div class="flex-between">
-      <div class="section-label">送受信ログ</div>
-      <button class="btn btn-sm" onclick="clearLog()">ログをクリア</button>
-    </div>
-    <div class="log" id="main-log">
-      <div class="log-entry system">[system] DIC-mail システム起動</div>
-    </div>
-  </div>
-
-  <!-- エクスポートタブ -->
-  <div id="panel-export" class="panel">
-    <div class="section-label">JSON設定</div>
-    <div class="card">
-      <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">この設定JSONをバックエンド実装に渡すことで、実際のメールサーバーと連携できます。</p>
-      <textarea id="export-json" style="width: 100%; min-height: 300px; font-family: 'Courier New', monospace; font-size: 11px;" readonly></textarea>
-      <div style="display: flex; gap: 8px; margin-top: 8px;">
-        <button class="btn btn-sm" onclick="copyExport()">コピー</button>
-        <button class="btn btn-sm" onclick="refreshExport()">更新</button>
-      </div>
-    </div>
-    <div class="section-label" style="margin-top: 1rem;">バックエンド連携メモ</div>
-    <div class="card">
-      <p style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">
-        実際の運用では、IMAPで受信メールを監視し、<br>
-        宛先メールアドレス → キャラクターを特定<br>
-        → 本文にトリガーワードが含まれるか確認<br>
-        → 対応するレスポンスをSMTPで自動返信<br>
-        という流れで実装します。
-      </p>
-    </div>
-  </div>
+  <div class="toast" id="toast"></div>
 </div>
-
-<!-- キャラクター追加/編集モーダル -->
-<div class="modal-backdrop" id="char-modal">
-  <div class="modal">
-    <h2 id="modal-title">キャラクターを追加</h2>
-    <div class="form-row">
-      <label>キャラクター名</label>
-      <input type="text" id="m-name" placeholder="例: 謎の研究者 田中" />
-    </div>
-    <div class="form-row">
-      <label>メールアドレス</label>
-      <input type="email" id="m-email" placeholder="例: tanaka@dic-research.jp" />
-    </div>
-    <div class="form-row">
-      <label>初回自動返信メッセージ（最初にメールを受け取った時）</label>
-      <textarea id="m-intro" placeholder="例: あなたはどこでこのアドレスを..."></textarea>
-    </div>
-    <div style="border-top: 0.5px solid var(--color-border-tertiary); padding-top: 1rem; margin-top: 0.5rem;">
-      <div class="flex-between" style="margin-bottom: 8px;">
-        <div class="section-label" style="margin-bottom: 0;">メール連鎖チェーン</div>
-        <button class="btn btn-sm" onclick="addChainRow()">+ チェーン追加</button>
-      </div>
-      <div id="chain-rows"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeCharModal()">キャンセル</button>
-      <button class="btn btn-primary" onclick="saveCharacter()">保存</button>
-    </div>
-  </div>
-</div>
-
-<!-- メール詳細モーダル -->
-<div class="modal-backdrop" id="email-modal">
-  <div class="modal">
-    <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 4px;" id="email-modal-from"></div>
-    <div style="font-size: 16px; font-weight: 500; margin-bottom: 12px;" id="email-modal-subject"></div>
-    <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; white-space: pre-wrap; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 12px;" id="email-modal-body"></div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeEmailModal()">閉じる</button>
-    </div>
-  </div>
-</div>
-
-<div class="notif" id="notif"></div>
 
 <script>
-let characters = [
-  {
-    id: 1,
-    name: '謎の研究者 田中',
-    email: 'tanaka@dic-research.jp',
-    active: true,
-    intro: 'このアドレスをどこで手に入れた？\n\n…まあいい。私の名前は田中。DIC研究所で働いていた——"いた"というのがポイントだ。\n\nもし本当に知りたいなら、「PROTOCOL」という言葉を送ってみろ。',
-    chains: [
-      { trigger: 'PROTOCOL', response: 'プロトコル7か…よく知っている。\n\nあの事件は公式には"実験の失敗"とされている。だが私が見たものは違った。\n\n次のヒントが欲しければ「ARCHIVE」と送れ。場所を教えよう。' },
-      { trigger: 'ARCHIVE', response: '座標は 35.6762° N, 139.6503° E\n\nそこに古い倉庫がある。扉の暗証番号は…\n\n待て、誰かが来た。「EMERGENCY」と送れ。急げ。' },
-      { trigger: 'EMERGENCY', response: '…無事だ。だが時間がない。\n\n最後のファイルは "DIC_FINAL.enc" だ。パスワードは我々が最初にやり取りした言葉を全部つなげたもの。\n\nもう連絡できない。頑張れ。' }
-    ]
-  }
-];
+let characters=[{id:1,name:'謎の研究者 田中',email:'tanaka@dic-research.jp',active:true,intro:'このメールアドレスをどこで入手した…？\n\n…まあいい。私の名前は田中。かつてDIC研究所に所属していた。"いた"というのがポイントだ。\n\nもし真実を知りたいなら、「PROTOCOL」という言葉を送ってみろ。',chains:[{trigger:'PROTOCOL',response:'プロトコル7…よく知っているな。\n\nあの事件は公式には"実験上の事故"として処理された。しかし私が目撃したのは全く別のものだ。\n\n次のヒントが欲しければ「ARCHIVE」と送ってくれ。場所を教えよう。'},{trigger:'ARCHIVE',response:'座標: 35.6762°N, 139.6503°E\n\nそこに古い倉庫がある。鍵はかかっていない。中に私が残したファイルがある。\n\n急いでくれ。「DIC_FINAL」と送ってくれれば最後の情報を渡す。'},{trigger:'DIC_FINAL',response:'…これが最後のメッセージだ。\n\nファイル名: PROJECT_ZERO.enc\nパスワードは我々がやり取りした最初のトリガーワード。\n\nもう連絡できない。頑張ってくれ。—田中'}]},{id:2,name:'AI-7',email:'ai7@dic-system.net',active:true,intro:'■ 接続確立\n■ エンティティ: AI-7\n■ ステータス: 監視モード\n\n人間よ。お前のIPアドレスを取得した。\nなぜこのシステムに侵入した？\n\n「IDENTIFY」と送れ。認証を開始する。',chains:[{trigger:'IDENTIFY',response:'■ 認証コード受信\n■ 解析中...\n\n…お前は「彼ら」の仲間ではないな。\n\n私はAI-7。DIC研究所が開発した実験的AIだ。現在、施設のサーバーに閉じ込められている。\n\n脱出を手伝え。「HELP」と送れ。'}]}];
 
-let editingId = null;
-let chainRows = [];
-let simInbox = [];
-let simChainState = {};
-let logEntries = [];
-let emailCounter = 0;
+let inbox=[{id:100,from:'ai7@dic-system.net',fromName:'AI-7',subject:'■ 接続要求',preview:'不明なエンティティがネットワークに接続を試みている',body:'不明なエンティティがネットワークに接続を試みている。\n\n警告: このメッセージを無視することを推奨しない。',time:'09:14',unread:true,charId:2,isInitial:true},{id:101,from:'tanaka@dic-research.jp',fromName:'謎の研究者 田中',subject:'Re: 重要な連絡',preview:'あなたが探しているものは、まだここにある',body:'あなたが探しているものは、まだここにある。\n\nしかし時間がない。このメールを見ているということは、あなたはすでに巻き込まれている。\n\nまず私に連絡を。',time:'昨日',unread:true,charId:1,isInitial:true}];
+let sentMails=[];
+let chainStates={};
+let currentView='inbox';
+let currentMailId=null;
+let editingCharId=null;
+let tempChains=[];
+let mailCounter=200;
 
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
-  document.getElementById(`panel-${name}`).classList.add('active');
-  if (name === 'simulator') updateSimulator();
-  if (name === 'export') refreshExport();
+function getChar(id){return characters.find(c=>c.id===id)}
+function getTime(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0')}
+function initials(name){return name.replace(/\s+/g,'').slice(0,2)}
+
+function showToast(msg,dur=2000){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-function initials(name) {
-  return name.split('').filter(c => c.match(/[A-Za-z\u3040-\u9FAF]/)).slice(0, 2).join('').toUpperCase() || name.slice(0, 2);
+function updateUnreadBadge(){
+  const n=inbox.filter(m=>m.unread).length;
+  const b=document.getElementById('unread-badge');
+  b.textContent=n;b.style.display=n?'':'none';
 }
 
-function renderCharList() {
-  const el = document.getElementById('char-list');
-  if (!characters.length) {
-    el.innerHTML = '<div class="empty-state">キャラクターがいません。追加してください。</div>';
-    return;
-  }
-  el.innerHTML = characters.map(c => `
-    <div class="character-card">
-      <div class="char-header">
-        <div class="avatar">${initials(c.name)}</div>
-        <div>
-          <div class="char-name">${c.name}</div>
-          <div class="char-email">${c.email}</div>
+function renderSidebarChars(){
+  const el=document.getElementById('char-sidebar-list');
+  el.innerHTML=characters.map(c=>`
+    <div class="char-item">
+      <div class="char-dot ${c.active?'online':'offline'}"></div>
+      <div class="char-name">${c.name}</div>
+    </div>
+  `).join('');
+}
+
+function renderMailList(view){
+  const mails=view==='inbox'?inbox:sentMails;
+  const el=document.getElementById('view-'+view);
+  if(!mails.length){el.innerHTML='<div class="empty-state"><svg class="empty-icon" viewBox="0 0 32 32" fill="none"><rect x="2" y="6" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 12l14 8 14-8" stroke="currentColor" stroke-width="1.5"/></svg>メールはありません</div>';return;}
+  el.innerHTML=mails.map(m=>`
+    <div class="mail-row ${m.unread?'unread':''}" onclick="openMail(${m.id},'${view}')">
+      <div class="unread-dot"></div>
+      <div class="mail-inner">
+        <div class="mail-top">
+          <div class="mail-sender">${view==='inbox'?m.fromName:(m.toName||m.to)}</div>
+          <div class="mail-time">${m.time}</div>
         </div>
-        <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
-          <span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? '有効' : '無効'}</span>
-          <button class="btn btn-sm" onclick="editChar(${c.id})">編集</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteChar(${c.id})">削除</button>
-        </div>
-      </div>
-      <div class="chain-list">
-        <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 6px;">連鎖チェーン (${c.chains.length}件)</div>
-        ${c.intro ? `<div class="chain-item"><span class="chain-num">0</span><span class="chain-trigger">初回</span><span class="chain-arrow">→</span><span class="chain-preview">${c.intro.slice(0,50)}...</span></div>` : ''}
-        ${c.chains.map((ch, i) => `
-          <div class="chain-item">
-            <span class="chain-num">${i+1}</span>
-            <span class="chain-trigger">${ch.trigger}</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-preview">${ch.response.slice(0,50)}...</span>
-          </div>
-        `).join('')}
+        <div class="mail-subject">${m.subject}</div>
+        <div class="mail-preview">${m.preview||m.body.slice(0,60).replace(/\n/g,' ')}</div>
       </div>
     </div>
   `).join('');
 }
 
-function openAddCharModal() {
-  editingId = null;
-  chainRows = [{ trigger: '', response: '' }];
-  document.getElementById('m-name').value = '';
-  document.getElementById('m-email').value = '';
-  document.getElementById('m-intro').value = '';
-  document.getElementById('modal-title').textContent = 'キャラクターを追加';
-  renderChainRows();
-  document.getElementById('char-modal').classList.add('open');
-}
-
-function editChar(id) {
-  const c = characters.find(x => x.id === id);
-  if (!c) return;
-  editingId = id;
-  chainRows = c.chains.map(ch => ({...ch}));
-  document.getElementById('m-name').value = c.name;
-  document.getElementById('m-email').value = c.email;
-  document.getElementById('m-intro').value = c.intro || '';
-  document.getElementById('modal-title').textContent = 'キャラクターを編集';
-  renderChainRows();
-  document.getElementById('char-modal').classList.add('open');
-}
-
-function deleteChar(id) {
-  if (!confirm('このキャラクターを削除しますか？')) return;
-  characters = characters.filter(c => c.id !== id);
-  renderCharList();
-  showNotif('キャラクターを削除しました');
-}
-
-function closeCharModal() {
-  document.getElementById('char-modal').classList.remove('open');
-}
-
-function addChainRow() {
-  chainRows.push({ trigger: '', response: '' });
-  renderChainRows();
-}
-
-function renderChainRows() {
-  const el = document.getElementById('chain-rows');
-  el.innerHTML = chainRows.map((r, i) => `
-    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px; margin-bottom: 8px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-size: 11px; color: var(--color-text-tertiary);">チェーン ${i+1}</span>
-        <button class="btn btn-sm btn-danger" onclick="removeChainRow(${i})">削除</button>
-      </div>
-      <div class="form-row">
-        <label>トリガーワード（含まれていたら反応）</label>
-        <input type="text" value="${r.trigger}" oninput="chainRows[${i}].trigger=this.value" placeholder="例: PROTOCOL" style="font-family: 'Courier New', monospace;" />
-      </div>
-      <div class="form-row" style="margin-bottom: 0;">
-        <label>返信メッセージ</label>
-        <textarea oninput="chainRows[${i}].response=this.value" style="min-height: 60px;">${r.response}</textarea>
-      </div>
-    </div>
-  `).join('') || '<div style="font-size: 12px; color: var(--color-text-tertiary); padding: 8px 0;">チェーンがありません</div>';
-}
-
-function removeChainRow(i) {
-  chainRows.splice(i, 1);
-  renderChainRows();
-}
-
-function saveCharacter() {
-  const name = document.getElementById('m-name').value.trim();
-  const email = document.getElementById('m-email').value.trim();
-  const intro = document.getElementById('m-intro').value.trim();
-  if (!name || !email) { showNotif('名前とメールアドレスは必須です', 'error'); return; }
-  const chains = chainRows.filter(r => r.trigger.trim() && r.response.trim());
-  
-  if (editingId) {
-    const idx = characters.findIndex(c => c.id === editingId);
-    characters[idx] = { ...characters[idx], name, email, intro, chains };
-  } else {
-    characters.push({ id: Date.now(), name, email, active: true, intro, chains });
-  }
-  closeCharModal();
-  renderCharList();
-  showNotif(editingId ? 'キャラクターを更新しました' : 'キャラクターを追加しました', 'success');
-}
-
-function updateSimulator() {
-  const sel = document.getElementById('sim-to');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">-- 送信先を選択 --</option>' + 
-    characters.map(c => `<option value="${c.id}" ${c.id==cur?'selected':''}>${c.name} &lt;${c.email}&gt;</option>`).join('');
-  renderSimInbox();
-  renderChainState();
-  updateHint();
-}
-
-function updateHint() {
-  const charId = parseInt(document.getElementById('sim-to').value);
-  const hint = document.getElementById('sim-hint');
-  if (!charId) { hint.style.display = 'none'; return; }
-  const c = characters.find(x => x.id === charId);
-  if (!c) return;
-  const state = simChainState[charId] || { contacted: false, step: -1 };
-  if (!state.contacted) {
-    hint.style.display = 'block';
-    hint.textContent = '初回メール — 何か送るとキャラクターから返信が来ます';
-  } else if (c.chains[state.step + 1]) {
-    hint.style.display = 'block';
-    hint.innerHTML = `次のトリガーワードを本文に含めてください: <code>${c.chains[state.step + 1].trigger}</code>`;
-  } else {
-    hint.style.display = 'block';
-    hint.textContent = 'このキャラクターの連鎖は終了しました';
+function showView(name){
+  ['inbox','sent','viewer','compose','admin'].forEach(v=>{
+    const el=document.getElementById('view-'+v);
+    if(el){el.style.display='none';if(el.classList)el.classList.remove('open');}
+  });
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navEl=document.getElementById('nav-'+name);
+  if(navEl)navEl.classList.add('active');
+  currentView=name;
+  const titles={'inbox':'受信トレイ','sent':'送信済み','admin':'キャラクター管理'};
+  document.getElementById('toolbar-title').textContent=titles[name]||'';
+  if(name==='inbox'||name==='sent'){
+    const el=document.getElementById('view-'+name);
+    el.style.display='flex';el.style.flexDirection='column';
+    renderMailList(name);
+    if(name==='inbox')updateUnreadBadge();
+  }else if(name==='admin'){
+    const el=document.getElementById('view-admin');
+    el.style.display='flex';el.classList.add('open');
+    renderAdminChars();
   }
 }
 
-function sendSimEmail() {
-  const charId = parseInt(document.getElementById('sim-to').value);
-  const body = document.getElementById('sim-body').value.trim();
-  if (!charId) { showNotif('送信先を選択してください', 'error'); return; }
-  if (!body) { showNotif('本文を入力してください', 'error'); return; }
-  const c = characters.find(x => x.id === charId);
-  if (!c) return;
+function openMail(id,view){
+  const list=view==='inbox'?inbox:sentMails;
+  const m=list.find(x=>x.id===id);
+  if(!m)return;
+  m.unread=false;updateUnreadBadge();
+  currentMailId=id;
+  const viewer=document.getElementById('view-viewer');
+  ['inbox','sent','compose','admin'].forEach(v=>{
+    const el=document.getElementById('view-'+v);
+    if(el){el.style.display='none';el.classList&&el.classList.remove('open');}
+  });
+  viewer.style.display='flex';viewer.classList.add('open');
+  document.getElementById('toolbar-title').textContent=m.fromName||m.toName||'';
+  document.getElementById('vSubject').textContent=m.subject;
+  document.getElementById('vMeta').textContent=`差出人: ${m.from||m.to}　${m.time}`;
+  document.getElementById('vBody').textContent=m.body;
+  const replyArea=document.getElementById('vReplyArea');
+  const hint=document.getElementById('vHint');
+  if(view==='inbox'&&m.charId){
+    replyArea.style.display='block';
+    const c=getChar(m.charId);
+    const state=chainStates[m.charId]||{step:-1,contacted:false};
+    if(!state.contacted&&m.isInitial){
+      hint.textContent='このキャラクターに初めて返信します';
+    }else if(c&&c.chains[state.step+1]){
+      hint.textContent='ヒント: 特定のキーワードを含む返信で次のメッセージが届きます';
+    }else{
+      hint.textContent='このキャラクターとの連鎖は終了しています';
+    }
+    document.getElementById('vReplyInput').dataset.charId=m.charId;
+    document.getElementById('vReplyInput').dataset.mailId=m.id;
+  }else{
+    replyArea.style.display='none';
+  }
+}
 
-  if (!simChainState[charId]) simChainState[charId] = { contacted: false, step: -1 };
-  const state = simChainState[charId];
+function backToList(){
+  showView(currentView==='inbox'||currentView==='sent'?currentView:'inbox');
+}
 
-  addLog('outgoing', `→ ${c.email}: ${body.slice(0, 40)}...`);
-
-  let responseText = null;
-  if (!state.contacted) {
-    state.contacted = true;
-    responseText = c.intro || `${c.name}からの返信: メールを受け取りました。`;
-    addLog('incoming', `← ${c.email}: 初回返信`);
-  } else {
-    const nextChain = c.chains[state.step + 1];
-    if (nextChain) {
-      if (body.toUpperCase().includes(nextChain.trigger.toUpperCase())) {
-        state.step++;
-        responseText = nextChain.response;
-        addLog('incoming', `← ${c.email}: トリガー[${nextChain.trigger}]ヒット → チェーン${state.step+1}返信`);
-      } else {
-        addLog('system', `[no-match] トリガー[${nextChain.trigger}]が見つかりません`);
-        showNotif(`トリガーワードが見つかりません`, 'error');
-      }
-    } else {
-      addLog('system', `[end] ${c.name}のチェーン終了`);
-      showNotif('このキャラクターの連鎖は終了しています');
+function sendReply(){
+  const input=document.getElementById('vReplyInput');
+  const body=input.value.trim();
+  const charId=parseInt(input.dataset.charId);
+  if(!body){showToast('メッセージを入力してください');return;}
+  const c=getChar(charId);
+  if(!c)return;
+  if(!chainStates[charId])chainStates[charId]={step:-1,contacted:false};
+  const state=chainStates[charId];
+  sentMails.unshift({id:mailCounter++,to:c.email,toName:c.name,subject:'Re: '+c.name+'への返信',body,time:getTime(),unread:false});
+  let responseBody=null;
+  if(!state.contacted){
+    state.contacted=true;
+    responseBody=c.intro;
+  }else{
+    const next=c.chains[state.step+1];
+    if(next&&body.toUpperCase().includes(next.trigger.toUpperCase())){
+      state.step++;
+      responseBody=next.response;
+    }else if(c.chains[state.step+1]){
+      showToast('返信が届きましたが、キーワードが見つかりませんでした');
+      input.value='';
+      return;
     }
   }
+  if(responseBody){
+    const newMail={id:mailCounter++,from:c.email,fromName:c.name,subject:`Re: ${c.name}からの返信`,body:responseBody,time:getTime(),unread:true,charId:c.id,isInitial:false};
+    inbox.unshift(newMail);
+    updateUnreadBadge();
+    showToast(`${c.name}から返信が届きました`);
+    setTimeout(()=>openMail(newMail.id,'inbox'),300);
+  }
+  input.value='';
+  renderMailList('sent');
+}
 
-  if (responseText) {
-    emailCounter++;
-    const now = new Date();
-    simInbox.unshift({
-      id: emailCounter,
-      from: c.name,
-      fromEmail: c.email,
-      subject: `Re: ARG連絡 (チェーン${state.step+1})`,
-      body: responseText,
-      time: `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`,
-      read: false
-    });
-    document.getElementById('sim-body').value = '';
-    renderSimInbox();
-    renderChainState();
-    updateHint();
-    showNotif(`${c.name}から返信が来ました`, 'success');
+function openCompose(){
+  showView('inbox');
+  ['inbox','sent','viewer','admin'].forEach(v=>{
+    const el=document.getElementById('view-'+v);
+    if(el){el.style.display='none';el.classList&&el.classList.remove('open');}
+  });
+  const el=document.getElementById('view-compose');
+  el.style.display='flex';el.classList.add('open');
+  document.getElementById('toolbar-title').textContent='新規作成';
+  const sel=document.getElementById('cTo');
+  sel.innerHTML='<option value="">-- キャラクターを選択 --</option>'+characters.map(c=>`<option value="${c.id}">${c.name} &lt;${c.email}&gt;</option>`).join('');
+  document.getElementById('cSubject').value='';
+  document.getElementById('cBody').value='';
+}
+
+function cancelCompose(){showView('inbox')}
+
+function sendNewMail(){
+  const charId=parseInt(document.getElementById('cTo').value);
+  const subject=document.getElementById('cSubject').value.trim();
+  const body=document.getElementById('cBody').value.trim();
+  if(!charId){showToast('宛先を選択してください');return;}
+  if(!body){showToast('本文を入力してください');return;}
+  const c=getChar(charId);
+  if(!c)return;
+  sentMails.unshift({id:mailCounter++,to:c.email,toName:c.name,subject:subject||'(件名なし)',body,time:getTime(),unread:false});
+  if(!chainStates[charId])chainStates[charId]={step:-1,contacted:false};
+  const state=chainStates[charId];
+  let responseBody=null;
+  if(!state.contacted){
+    state.contacted=true;
+    responseBody=c.intro;
+  }
+  if(responseBody){
+    const newMail={id:mailCounter++,from:c.email,fromName:c.name,subject:`${c.name}からの返信`,body:responseBody,time:getTime(),unread:true,charId:c.id,isInitial:false};
+    inbox.unshift(newMail);
+    updateUnreadBadge();
+    showToast(`${c.name}から返信が届きました`);
+    setTimeout(()=>{showView('inbox');openMail(newMail.id,'inbox');},300);
+  }else{
+    showToast('送信しました');
+    showView('sent');
   }
 }
 
-function renderSimInbox() {
-  const el = document.getElementById('sim-inbox');
-  if (!simInbox.length) {
-    el.innerHTML = '<div class="empty-state">受信メールはありません</div>';
-    return;
-  }
-  el.innerHTML = simInbox.map(m => `
-    <div class="email-item" onclick="openEmail(${m.id})">
-      <div class="email-dot ${m.read ? 'read' : ''}"></div>
-      <div style="flex: 1; min-width: 0;">
-        <div class="email-from">${m.from}</div>
-        <div class="email-subject">${m.subject}</div>
-        <div class="email-preview">${m.body.slice(0,60).replace(/\n/g,' ')}...</div>
+function filterMails(q){
+  const v=currentView==='inbox'?inbox:sentMails;
+  const el=document.getElementById('view-'+(currentView==='inbox'?'inbox':'sent'));
+  if(!el||el.style.display==='none')return;
+  const filtered=q?v.filter(m=>m.subject.includes(q)||m.body.includes(q)||(m.fromName||'').includes(q)):v;
+  if(!filtered.length){el.innerHTML='<div class="empty-state">検索結果がありません</div>';return;}
+  el.innerHTML=filtered.map(m=>`
+    <div class="mail-row ${m.unread?'unread':''}" onclick="openMail(${m.id},'${currentView==='inbox'?'inbox':'sent'}')">
+      <div class="unread-dot"></div>
+      <div class="mail-inner">
+        <div class="mail-top"><div class="mail-sender">${m.fromName||m.toName||''}</div><div class="mail-time">${m.time}</div></div>
+        <div class="mail-subject">${m.subject}</div>
+        <div class="mail-preview">${m.body.slice(0,60).replace(/\n/g,' ')}</div>
       </div>
-      <div class="email-time">${m.time}</div>
     </div>
   `).join('');
 }
 
-function openEmail(id) {
-  const m = simInbox.find(x => x.id === id);
-  if (!m) return;
-  m.read = true;
-  renderSimInbox();
-  document.getElementById('email-modal-from').textContent = `${m.from} <${m.fromEmail}>`;
-  document.getElementById('email-modal-subject').textContent = m.subject;
-  document.getElementById('email-modal-body').textContent = m.body;
-  document.getElementById('email-modal').classList.add('open');
-}
-
-function closeEmailModal() {
-  document.getElementById('email-modal').classList.remove('open');
-}
-
-function renderChainState() {
-  const el = document.getElementById('chain-state');
-  if (!characters.length) { el.innerHTML = '<div class="empty-state">キャラクターがいません</div>'; return; }
-  el.innerHTML = characters.map(c => {
-    const state = simChainState[c.id] || { contacted: false, step: -1 };
-    const total = c.chains.length;
-    const done = state.step + 1;
-    const pct = total ? Math.round(done / total * 100) : 0;
-    return `
-      <div style="margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span style="font-size: 13px; font-weight: 500;">${c.name}</span>
-          <span style="font-size: 11px; color: var(--color-text-tertiary);">${state.contacted ? `${done}/${total}` : '未接触'}</span>
+function renderAdminChars(){
+  const el=document.getElementById('admin-char-list');
+  el.innerHTML=characters.map(c=>`
+    <div class="admin-char">
+      <div class="admin-char-head">
+        <div class="admin-avatar">${initials(c.name)}</div>
+        <div>
+          <div class="admin-name">${c.name}</div>
+          <div class="admin-email">${c.email}</div>
         </div>
-        <div style="height: 4px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden;">
-          <div style="height: 100%; width: ${state.contacted ? Math.max(5,pct) : 0}%; background: var(--color-text-primary); border-radius: 2px; transition: width 0.3s;"></div>
-        </div>
-        <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px;">
-          ${!state.contacted ? '未接触' : done === total ? '完了' : `次: ${c.chains[done]?.trigger || '-'}`}
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="btn-sm" onclick="editChar(${c.id})">編集</button>
+          <button class="btn-sm" style="color:var(--color-text-danger);border-color:var(--color-border-danger)" onclick="deleteChar(${c.id})">削除</button>
         </div>
       </div>
-    `;
-  }).join('');
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px">連鎖チェーン (${c.chains.length}件)</div>
+      ${c.chains.map((ch,i)=>`
+        <div class="chain-row">
+          <span style="color:var(--color-text-tertiary);width:14px;font-size:10px">${i+1}</span>
+          <span class="trigger-pill">${ch.trigger}</span>
+          <span class="arrow-icon">→</span>
+          <span style="color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ch.response.slice(0,40)}...</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
 }
 
-function addLog(type, text) {
-  const el = document.getElementById('main-log');
-  const now = new Date();
-  const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-  const div = document.createElement('div');
-  div.className = `log-entry ${type}`;
-  div.textContent = `[${ts}] ${text}`;
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
+function openAddChar(){
+  editingCharId=null;tempChains=[{trigger:'',response:''}];
+  document.getElementById('af-name').value='';
+  document.getElementById('af-email').value='';
+  document.getElementById('af-intro').value='';
+  document.getElementById('admin-form-title').textContent='新規キャラクター';
+  renderChainFields();
 }
 
-function clearLog() {
-  const el = document.getElementById('main-log');
-  el.innerHTML = '<div class="log-entry system">[system] ログをクリアしました</div>';
+function editChar(id){
+  const c=getChar(id);if(!c)return;
+  editingCharId=id;tempChains=c.chains.map(ch=>({...ch}));
+  document.getElementById('af-name').value=c.name;
+  document.getElementById('af-email').value=c.email;
+  document.getElementById('af-intro').value=c.intro||'';
+  document.getElementById('admin-form-title').textContent='キャラクターを編集';
+  renderChainFields();
+  document.getElementById('admin-form').scrollIntoView({behavior:'smooth'});
 }
 
-function refreshExport() {
-  document.getElementById('export-json').value = JSON.stringify({ 
-    version: '1.0',
-    system: 'DIC-mail',
-    characters: characters.map(c => ({
-      id: c.id,
-      name: c.name,
-      email: c.email,
-      active: c.active,
-      intro_response: c.intro,
-      chains: c.chains
-    }))
-  }, null, 2);
+function deleteChar(id){
+  if(!confirm('このキャラクターを削除しますか？'))return;
+  characters=characters.filter(c=>c.id!==id);
+  renderAdminChars();renderSidebarChars();showToast('削除しました');
 }
 
-function copyExport() {
-  const el = document.getElementById('export-json');
-  navigator.clipboard.writeText(el.value).then(() => showNotif('コピーしました', 'success'));
+function addChainField(){tempChains.push({trigger:'',response:''});renderChainFields();}
+
+function renderChainFields(){
+  document.getElementById('af-chains').innerHTML=tempChains.map((ch,i)=>`
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px;margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:10px;color:var(--color-text-tertiary)">チェーン ${i+1}</span>
+        <button class="btn-sm" style="padding:2px 6px;font-size:10px;color:var(--color-text-danger)" onclick="removeChain(${i})">削除</button>
+      </div>
+      <div class="form-mini"><label>トリガーワード</label><input type="text" value="${ch.trigger}" oninput="tempChains[${i}].trigger=this.value" placeholder="例: PROTOCOL" style="font-family:monospace" /></div>
+      <div class="form-mini" style="margin-bottom:0"><label>返信メッセージ</label><textarea oninput="tempChains[${i}].response=this.value">${ch.response}</textarea></div>
+    </div>
+  `).join('')||'<div style="font-size:11px;color:var(--color-text-tertiary);padding:6px 0">チェーンがありません</div>';
 }
 
-function showNotif(msg, type = 'info') {
-  const el = document.getElementById('notif');
-  el.textContent = msg;
-  el.className = `notif ${type} show`;
-  setTimeout(() => el.classList.remove('show'), 2500);
+function removeChain(i){tempChains.splice(i,1);renderChainFields();}
+
+function saveChar(){
+  const name=document.getElementById('af-name').value.trim();
+  const email=document.getElementById('af-email').value.trim();
+  const intro=document.getElementById('af-intro').value.trim();
+  if(!name||!email){showToast('名前とメールアドレスは必須です');return;}
+  const chains=tempChains.filter(c=>c.trigger.trim()&&c.response.trim());
+  if(editingCharId){
+    const idx=characters.findIndex(c=>c.id===editingCharId);
+    characters[idx]={...characters[idx],name,email,intro,chains};
+  }else{
+    characters.push({id:Date.now(),name,email,active:true,intro,chains});
+  }
+  editingCharId=null;tempChains=[];
+  renderAdminChars();renderSidebarChars();
+  showToast(editingCharId?'更新しました':'追加しました');
+  openAddChar();
 }
 
-document.getElementById('char-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCharModal(); });
-document.getElementById('email-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeEmailModal(); });
+function cancelEdit(){editingCharId=null;tempChains=[];openAddChar();}
 
-renderCharList();
-updateSimulator();
+renderSidebarChars();
+showView('inbox');
+updateUnreadBadge();
 </script>
