@@ -1,214 +1,258 @@
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-.wrap{display:flex;height:680px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary);font-size:13px}
-.sidebar{width:200px;flex-shrink:0;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;background:var(--color-background-secondary)}
-.sidebar-logo{padding:18px 16px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
-.logo-text{font-size:15px;font-weight:500;letter-spacing:0.5px;color:var(--color-text-primary)}
-.logo-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
-.compose-btn{margin:12px 12px 0;padding:8px 12px;background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;text-align:center}
-.compose-btn:hover{opacity:0.85}
-.nav-section{padding:12px 0 0}
-.nav-label{font-size:10px;color:var(--color-text-tertiary);padding:0 16px 6px;letter-spacing:0.5px}
-.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;color:var(--color-text-secondary);font-size:12px;border-left:2px solid transparent;transition:all 0.1s}
-.nav-item:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
-.nav-item.active{background:var(--color-background-primary);color:var(--color-text-primary);border-left-color:var(--color-text-primary);border-radius:0}
-.nav-icon{width:14px;height:14px;opacity:0.6;flex-shrink:0}
-.nav-badge{margin-left:auto;background:var(--color-text-primary);color:var(--color-background-primary);font-size:10px;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center}
-.char-section{margin-top:auto;border-top:0.5px solid var(--color-border-tertiary);padding:12px}
-.char-label{font-size:10px;color:var(--color-text-tertiary);margin-bottom:8px}
-.char-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
-.char-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.char-dot.online{background:#4caf50}
-.char-dot.offline{background:var(--color-border-secondary)}
-.char-name{font-size:11px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.toolbar{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.toolbar-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
-.search-box{padding:5px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:12px;width:160px;background:var(--color-background-secondary);color:var(--color-text-primary)}
-.content{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.mail-list{flex:1}
-.mail-row{display:flex;align-items:stretch;padding:0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background 0.1s}
-.mail-row:hover{background:var(--color-background-secondary)}
-.mail-row.selected{background:var(--color-background-info)}
-.mail-row.unread .mail-sender{font-weight:500;color:var(--color-text-primary)}
-.unread-dot{width:3px;background:var(--color-text-primary);flex-shrink:0;align-self:stretch}
-.mail-row:not(.unread) .unread-dot{background:transparent}
-.mail-inner{display:flex;flex-direction:column;padding:10px 14px;flex:1;min-width:0}
-.mail-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
-.mail-sender{font-size:12px;color:var(--color-text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mail-time{font-size:11px;color:var(--color-text-tertiary);flex-shrink:0}
-.mail-subject{font-size:12px;color:var(--color-text-primary);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mail-preview{font-size:11px;color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.viewer{display:none;flex-direction:column;height:100%}
+:root{
+  --bg:#0e0e0e;--bg2:#141414;--bg3:#1a1a1a;--bg4:#202020;
+  --border:#2a2a2a;--border2:#333;
+  --text:#d8d8d8;--text2:#909090;--text3:#555;
+  --accent:#e0e0e0;--accent-dim:#666;
+  --unread:#ffffff;
+}
+body{font-family:'Noto Sans JP',sans-serif}
+.app{background:var(--bg);color:var(--text);height:700px;display:flex;flex-direction:column;border-radius:8px;overflow:hidden;border:1px solid var(--border2);position:relative}
+#d4mail-Header{background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.header-nav{display:flex;align-items:center;padding:0 16px;height:50px;gap:12px;border-bottom:1px solid var(--border)}
+.logo-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.logo-mark{width:26px;height:26px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:14px;height:10px;fill:var(--text)}
+.logo-name{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--text)}
+.nav-spacer{flex:1}
+.nav-btn{background:none;border:none;cursor:pointer;padding:6px 8px;color:var(--text3);display:flex;flex-direction:column;align-items:center;gap:2px;transition:color 0.15s}
+.nav-btn:hover{color:var(--text)}
+.nav-btn svg{width:16px;height:16px;fill:currentColor}
+.nav-btn span{font-size:9px;letter-spacing:0.5px}
+.header-main{display:flex;align-items:center;padding:0 16px;height:42px}
+.header-inbox-title{font-size:14px;font-weight:500;flex:1;color:var(--text)}
+.unread-badge{background:var(--text);color:var(--bg);font-size:10px;font-weight:700;padding:1px 6px;border-radius:2px;min-width:18px;text-align:center;margin-left:8px}
+.compose-btn{background:none;border:1px solid var(--border2);color:var(--text2);padding:5px 14px;font-size:12px;font-family:inherit;cursor:pointer;letter-spacing:0.5px;transition:all 0.15s;margin-left:auto}
+.compose-btn:hover{border-color:var(--text2);color:var(--text)}
+
+#d4mail-Main{flex:1;display:flex;overflow:hidden}
+.main-wrap{display:flex;width:100%;height:100%}
+
+.list-panel{width:100%;display:flex;flex-direction:column;border-right:1px solid var(--border);transition:width 0.25s}
+.list-panel.narrow{width:320px;flex-shrink:0}
+.list-scroll{flex:1;overflow-y:auto}
+.list-scroll::-webkit-scrollbar{width:3px}
+.list-scroll::-webkit-scrollbar-thumb{background:var(--border2)}
+.list-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--text3);font-size:12px;gap:10px}
+.list-empty svg{width:32px;height:32px;fill:var(--text3)}
+
+.mail-item{display:flex;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;gap:10px;transition:background 0.1s;align-items:flex-start}
+.mail-item:hover{background:var(--bg3)}
+.mail-item.selected{background:var(--bg4)}
+.unread-dot{width:5px;height:5px;border-radius:50%;background:var(--unread);margin-top:7px;flex-shrink:0;transition:background 0.2s}
+.mail-item:not(.unread) .unread-dot{background:transparent}
+.mail-col{flex:1;min-width:0}
+.mail-row1{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.mail-sender{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-item.unread .mail-sender{color:var(--text);font-weight:500}
+.mail-time{font-size:10px;color:var(--text3)}
+.mail-subject{font-size:12px;color:var(--text2);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-item.unread .mail-subject{color:var(--text)}
+.mail-preview{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.viewer{flex:1;display:none;flex-direction:column;overflow:hidden}
 .viewer.open{display:flex}
-.viewer-header{padding:16px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
-.viewer-back{font-size:12px;color:var(--color-text-secondary);cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;gap:4px}
-.viewer-back:hover{color:var(--color-text-primary)}
-.viewer-subject{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
-.viewer-meta{font-size:11px;color:var(--color-text-tertiary)}
-.viewer-body{flex:1;overflow-y:auto;padding:20px 16px;font-size:13px;color:var(--color-text-secondary);line-height:1.8;white-space:pre-wrap}
-.viewer-reply{padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary);flex-shrink:0}
-.reply-hint{font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px}
-.reply-row{display:flex;gap:8px}
-.reply-input{flex:1;padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:12px;background:var(--color-background-secondary);color:var(--color-text-primary)}
-.reply-send{padding:7px 14px;background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;flex-shrink:0}
-.reply-send:hover{opacity:0.85}
-.compose-panel{display:none;flex-direction:column;height:100%}
-.compose-panel.open{display:flex}
-.compose-header{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.compose-title{font-size:14px;font-weight:500;flex:1}
-.compose-cancel{font-size:12px;color:var(--color-text-secondary);cursor:pointer}
-.compose-cancel:hover{color:var(--color-text-primary)}
-.compose-fields{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
-.compose-field{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
-.compose-field:last-child{border-bottom:none}
-.field-label{font-size:11px;color:var(--color-text-tertiary);width:28px;flex-shrink:0}
-.field-input{flex:1;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none}
-.compose-body-area{flex:1;padding:14px 16px;overflow-y:auto}
-.compose-body-area textarea{width:100%;height:100%;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none;resize:none;line-height:1.7;min-height:200px}
-.compose-footer{padding:10px 16px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;flex-shrink:0}
-.toast{position:absolute;bottom:20px;right:20px;padding:8px 14px;background:var(--color-text-primary);color:var(--color-background-primary);border-radius:var(--border-radius-md);font-size:12px;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.viewer-head{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.back-btn{background:none;border:none;color:var(--text3);font-size:11px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;letter-spacing:0.3px;padding:0}
+.back-btn:hover{color:var(--text)}
+.back-btn svg{width:12px;height:12px;fill:currentColor}
+.viewer-subject{font-size:15px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.4}
+.viewer-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:8px}
+.viewer-body{flex:1;overflow-y:auto;padding:20px 18px;font-size:13px;color:var(--text2);line-height:2;white-space:pre-wrap}
+.viewer-body::-webkit-scrollbar{width:3px}
+.viewer-body::-webkit-scrollbar-thumb{background:var(--border2)}
+.viewer-reply{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg2)}
+.reply-label{font-size:10px;color:var(--text3);letter-spacing:0.5px;margin-bottom:7px}
+.reply-row{display:flex;gap:8px;align-items:flex-end}
+.reply-ta{flex:1;background:var(--bg3);border:1px solid var(--border2);padding:8px 10px;font-size:13px;color:var(--text);font-family:inherit;resize:none;outline:none;min-height:36px;max-height:90px;line-height:1.6;border-radius:0;transition:border-color 0.15s}
+.reply-ta:focus{border-color:var(--border2);outline:none}
+.reply-send{background:var(--text);color:var(--bg);border:none;padding:8px 16px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;height:36px;flex-shrink:0;letter-spacing:0.5px;transition:opacity 0.15s}
+.reply-send:hover{opacity:0.8}
+.reply-send:disabled{opacity:0.3;cursor:default}
+
+.compose-overlay{display:none;position:absolute;bottom:0;right:0;width:100%;max-width:520px;background:var(--bg2);border:1px solid var(--border2);border-bottom:none;z-index:50;flex-direction:column}
+.compose-overlay.open{display:flex}
+.compose-top{display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.compose-top-title{font-size:12px;font-weight:500;flex:1;color:var(--text);letter-spacing:0.5px}
+.compose-x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
+.compose-x:hover{color:var(--text)}
+.compose-field{display:flex;align-items:center;padding:9px 16px;border-bottom:1px solid var(--border)}
+.cf-label{font-size:10px;color:var(--text3);width:28px;flex-shrink:0;letter-spacing:0.5px}
+.cf-val{flex:1;background:none;border:none;font-size:13px;color:var(--text);font-family:inherit;outline:none}
+.cf-val::placeholder{color:var(--text3)}
+.compose-body-area{padding:12px 16px;background:var(--bg2)}
+.compose-body-ta{width:100%;background:none;border:none;font-size:13px;color:var(--text);font-family:inherit;outline:none;resize:none;min-height:110px;line-height:1.7}
+.compose-body-ta::placeholder{color:var(--text3)}
+.compose-foot{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border);background:var(--bg3)}
+.c-send{background:var(--text);color:var(--bg);border:none;padding:7px 20px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:700;letter-spacing:0.5px;transition:opacity 0.15s}
+.c-send:hover{opacity:0.8}
+.c-cancel{background:none;border:1px solid var(--border2);color:var(--text3);padding:7px 14px;font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s}
+.c-cancel:hover{border-color:var(--text3);color:var(--text)}
+
+.drawer{position:absolute;top:0;right:0;height:100%;width:280px;background:var(--bg2);border-left:1px solid var(--border2);z-index:80;transform:translateX(100%);transition:transform 0.22s;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border)}
+.drawer-title{font-size:12px;font-weight:500;flex:1;color:var(--text);letter-spacing:1px}
+.drawer-x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:0}
+.drawer-x:hover{color:var(--text)}
+.drawer-body{flex:1;overflow-y:auto;padding:16px}
+.drawer-label{font-size:9px;color:var(--text3);letter-spacing:1.5px;margin-bottom:10px}
+.drawer-char{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.drawer-char:hover .dc-name{color:var(--text)}
+.dc-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.dc-dot.active{background:var(--text2)}
+.dc-info{flex:1;min-width:0}
+.dc-name{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color 0.1s}
+.dc-email{font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drawer-add-btn{width:100%;background:none;border:1px solid var(--border2);color:var(--text3);padding:8px;font-size:11px;font-family:inherit;cursor:pointer;margin-top:12px;letter-spacing:0.5px;transition:all 0.15s}
+.drawer-add-btn:hover{border-color:var(--text2);color:var(--text)}
+.drawer-sep{border:none;border-top:1px solid var(--border);margin:16px 0}
+
+.modal-bg{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);width:90%;max-width:500px;max-height:88%;overflow-y:auto;padding:20px}
+.modal-box::-webkit-scrollbar{width:3px}
+.modal-box::-webkit-scrollbar-thumb{background:var(--border2)}
+.modal-h2{font-size:13px;font-weight:500;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);letter-spacing:0.5px}
+.ff{margin-bottom:11px}
+.ff label{display:block;font-size:10px;color:var(--text3);margin-bottom:4px;letter-spacing:0.5px}
+.ff input,.ff textarea,.ff select{width:100%;background:var(--bg3);border:1px solid var(--border);padding:7px 10px;font-size:12px;color:var(--text);font-family:inherit;outline:none;transition:border-color 0.15s;border-radius:0}
+.ff input:focus,.ff textarea:focus{border-color:var(--border2)}
+.ff textarea{min-height:65px;resize:vertical;line-height:1.6}
+.ff input::placeholder,.ff textarea::placeholder{color:var(--text3)}
+.chain-block{background:var(--bg3);border:1px solid var(--border);padding:10px;margin-bottom:8px}
+.chain-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;color:var(--text3);letter-spacing:0.5px}
+.chain-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;transition:color 0.1s}
+.chain-del:hover{color:var(--text)}
+.add-chain{width:100%;background:none;border:1px dashed var(--border);color:var(--text3);padding:7px;font-size:11px;cursor:pointer;margin-bottom:12px;font-family:inherit;letter-spacing:0.5px;transition:all 0.15s}
+.add-chain:hover{border-color:var(--border2);color:var(--text2)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.m-save{background:var(--text);color:var(--bg);border:none;padding:8px 20px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:700;letter-spacing:0.5px}
+.m-cancel{background:none;border:1px solid var(--border);color:var(--text3);padding:8px 14px;font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s}
+.m-cancel:hover{border-color:var(--text3);color:var(--text)}
+
+.typing-indicator{display:none;padding:16px 18px;font-size:12px;color:var(--text3);font-style:italic}
+.typing-dot{display:inline-block;animation:blink 1.2s infinite;margin-right:1px}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+.toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:var(--bg4);border:1px solid var(--border2);color:var(--text2);border-radius:2px;padding:7px 18px;font-size:11px;letter-spacing:0.3px;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap;z-index:200}
 .toast.show{opacity:1}
-.chain-badge{font-size:10px;padding:2px 6px;border-radius:3px;background:#e8f5e9;color:#2e7d32;border:0.5px solid #a5d6a7;flex-shrink:0}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--color-text-tertiary);font-size:13px;gap:8px}
-.empty-icon{width:32px;height:32px;opacity:0.3}
-.admin-panel{display:none;flex-direction:column;height:100%;overflow-y:auto}
-.admin-panel.open{display:flex}
-.admin-section{padding:16px}
-.admin-section h3{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary)}
-.admin-char{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;margin-bottom:8px}
-.admin-char-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.admin-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-secondary)}
-.admin-name{font-size:13px;font-weight:500}
-.admin-email{font-size:11px;color:var(--color-text-tertiary)}
-.chain-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px}
-.trigger-pill{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:3px;padding:2px 6px;font-family:monospace;color:var(--color-text-secondary)}
-.arrow-icon{color:var(--color-text-tertiary);font-size:10px}
-.form-mini{margin-bottom:8px}
-.form-mini label{font-size:11px;color:var(--color-text-tertiary);display:block;margin-bottom:3px}
-.form-mini input,.form-mini textarea,.form-mini select{width:100%;font-size:12px;padding:5px 8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary)}
-.form-mini textarea{min-height:60px;resize:vertical}
-.add-chain-btn{font-size:11px;color:var(--color-text-secondary);background:none;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 10px;cursor:pointer;width:100%;margin-top:4px}
-.add-chain-btn:hover{background:var(--color-background-secondary)}
-.btn-row{display:flex;gap:6px;margin-top:8px}
-.btn-sm{padding:5px 10px;font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)}
-.btn-sm:hover{background:var(--color-background-secondary)}
-.btn-sm.primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
-.btn-sm.primary:hover{opacity:0.85}
-.section-divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:12px 0}
-.relative{position:relative}
+.loading-screen{position:absolute;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:300;font-size:12px;color:var(--text3);letter-spacing:1px}
 </style>
 
-<div class="wrap relative" id="app">
+<div class="app" id="app">
+  <div class="loading-screen" id="loading">読み込み中...</div>
 
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-text">DIC-mail</div>
-      <div class="logo-sub">ARG メール連鎖システム</div>
+  <header id="d4mail-Header">
+    <div class="header-nav">
+      <div class="logo-wrap" onclick="showList()">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 18"><path d="M2.667 18C1.933 18 1.306 17.755.784 17.266.262 16.777 0 16.188 0 15.5V2.5C0 1.813.261 1.224.784.735 1.307.246 1.934 0 2.667 0H21.333C22.067 0 22.695.245 23.217.735 23.74 1.225 24.001 1.813 24 2.5V15.5C24 16.188 23.739 16.776 23.217 17.266 22.696 17.756 22.068 18 21.333 18H2.667ZM12 13.25c.844 0 1.611-.208 2.3-.688.689-.479 1.167-1.083 1.433-1.812H21.333V2.5H2.667V10.75H8.267c.267.75.744 1.354 1.433 1.813C10.389 13.042 11.156 13.25 12 13.25Z"/></svg>
+        </div>
+        <span class="logo-name">DIC-mail</span>
+      </div>
+      <div class="nav-spacer"></div>
+      <button class="nav-btn" onclick="toggleDrawer()">
+        <svg viewBox="0 0 40 28"><path d="M0 2C0 .895.895 0 2 0h36c1.105 0 2 .895 2 2s-.895 2-2 2H2C.895 4 0 3.105 0 2Z"/><path d="M0 14c0-1.105.895-2 2-2h36c1.105 0 2 .895 2 2s-.895 2-2 2H2c-1.105 0-2-.895-2-2Z"/><path d="M0 26c0-1.105.895-2 2-2h36c1.105 0 2 .895 2 2s-.895 2-2 2H2c-1.105 0-2-.895-2-2Z"/></svg>
+        <span>メニュー</span>
+      </button>
+      <button class="nav-btn" onclick="openAddChar()">
+        <svg viewBox="0 0 48 48"><path fill-rule="evenodd" d="M28.762 1.301c.208.405.261.926.364 1.967.197 1.968.295 2.952.708 3.495.257.337.599.6.99.762.392.162.82.217 1.24.16.672-.088 1.44-.715 2.971-1.968.808-.664 1.214-.996 1.648-1.135a2.4 2.4 0 0 1 1.607.196c.42.183.792.552 1.529 1.291l2.145 2.146c.74.74 1.109 1.109 1.291 1.529.231.533.261 1.131.084 1.685-.139.434-.47.84-1.133 1.648-1.254 1.534-1.881 2.3-1.972 2.974a2.4 2.4 0 0 0 .162 1.218 2.4 2.4 0 0 0 .762.862c.54.413 1.527.511 3.497.708 1.04.103 1.56.156 1.968.365.515.267.916.711 1.128 1.25C48 20.914 48 21.437 48 22.483v3.034c0 1.046 0 1.57-.168 1.992-.214.541-.612.986-1.129 1.252-.405.209-.926.261-1.968.365-1.968.197-2.952.295-3.494.708a2.4 2.4 0 0 0-.762.862 2.4 2.4 0 0 0-.161 1.218c.091.672.718 1.44 1.971 2.971.662.809.994 1.213 1.133 1.648.177.553.147 1.152-.084 1.685-.183.42-.552.792-1.291 1.531l-2.145 2.144c-.74.74-1.109 1.109-1.529 1.291a2.4 2.4 0 0 1-1.607.197c-.434-.14-.84-.47-1.648-1.133-1.534-1.254-2.3-1.88-2.972-1.972a2.4 2.4 0 0 0-1.24.161 2.4 2.4 0 0 0-.99.862c-.408.54-.507 1.524-.703 3.494-.104 1.041-.156 1.562-.364 1.968a2.4 2.4 0 0 1-1.252 1.128C27.086 48 26.563 48 25.517 48H22.483c-1.046 0-1.569 0-1.992-.168a2.4 2.4 0 0 1-1.252-1.128c-.208-.406-.261-.927-.364-1.968-.197-1.968-.295-2.952-.708-3.494a2.4 2.4 0 0 0-.99-.862 2.4 2.4 0 0 0-1.24-.161c-.672.092-1.44.718-2.971 1.972-.808.663-1.214.993-1.648 1.133a2.4 2.4 0 0 1-1.607-.197c-.42-.182-.792-.551-1.529-1.291L6.043 39.69c-.739-.74-1.108-1.111-1.291-1.531a2.4 2.4 0 0 1-.084-1.685c.14-.435.47-.839 1.132-1.648 1.254-1.533 1.88-2.299 1.97-2.971a2.4 2.4 0 0 0-.161-1.218 2.4 2.4 0 0 0-.762-.862c-.54-.413-1.526-.511-3.496-.708-1.04-.103-1.561-.156-1.969-.365A2.4 2.4 0 0 1 .17 27.452C0 27.027 0 26.504 0 25.458v-3.034c0-1.046 0-1.569.168-1.992a2.4 2.4 0 0 1 1.252-1.252c.406-.208.927-.261 1.968-.365 1.968-.196 2.952-.295 3.495-.707a2.4 2.4 0 0 0 .762-.862 2.4 2.4 0 0 0 .162-1.218C7.716 15.356 7.087 14.59 5.833 13.054c-.662-.809-.994-1.213-1.132-1.649a2.4 2.4 0 0 1 .084-1.684c.183-.42.552-.792 1.291-1.53l2.146-2.147c.74-.739 1.109-1.108 1.529-1.29a2.4 2.4 0 0 1 1.607-.197c.434.14.84.47 1.648 1.133 1.533 1.253 2.299 1.88 2.971 1.97a2.4 2.4 0 0 0 1.24-.161 2.4 2.4 0 0 0 .99-.862c.408-.54.507-1.525.703-3.495.104-1.04.156-1.562.364-1.967a2.4 2.4 0 0 1 1.252-1.128C20.431 0 20.954 0 22 0h3.034c1.046 0 1.569 0 1.992.168a2.4 2.4 0 0 1 1.252 1.128C28.278 1.3ZM24 33.6a9.6 9.6 0 1 0 0-19.2 9.6 9.6 0 0 0 0 19.2Z"/></svg>
+        <span>設定</span>
+      </button>
     </div>
-    <button class="compose-btn" onclick="openCompose()">+ 作成</button>
-    <div class="nav-section">
-      <div class="nav-label">メールボックス</div>
-      <div class="nav-item active" id="nav-inbox" onclick="showView('inbox')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.2"/></svg>
-        受信トレイ
-        <span class="nav-badge" id="unread-badge">2</span>
-      </div>
-      <div class="nav-item" id="nav-sent" onclick="showView('sent')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M14 2L2 7l5 3 5-5-5 5 2 5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        送信済み
-      </div>
-      <div class="nav-item" id="nav-admin" onclick="showView('admin')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2"/></svg>
-        キャラクター管理
-      </div>
+    <div class="header-main">
+      <span class="header-inbox-title">受信トレイ</span>
+      <span class="unread-badge" id="unread-badge" style="display:none">0</span>
+      <button class="compose-btn" onclick="openCompose()">作成</button>
     </div>
-    <div class="char-section">
-      <div class="char-label">登録キャラクター</div>
-      <div id="char-sidebar-list"></div>
+  </header>
+
+  <div id="d4mail-Main">
+    <div class="main-wrap">
+      <div class="list-panel" id="list-panel">
+        <div class="list-scroll" id="mail-list-el"></div>
+      </div>
+      <div class="viewer" id="viewer">
+        <div class="viewer-head">
+          <button class="back-btn" onclick="showList()">
+            <svg viewBox="0 0 20 36"><path fill-rule="evenodd" d="M.795 20L16.16 36 20 32.001 6.556 18 20 3.999 16.16 0 .795 16.001C.286 16.531 0 17.25 0 18c0 .75.286 1.469.795 2Z"/></svg>
+            受信トレイ
+          </button>
+          <div class="viewer-subject" id="v-subject"></div>
+          <div class="viewer-meta" id="v-meta"></div>
+        </div>
+        <div class="viewer-body" id="v-body"></div>
+        <div class="typing-indicator" id="typing-indicator">
+          <span class="typing-dot">●</span><span class="typing-dot">●</span><span class="typing-dot">●</span>
+        </div>
+        <div class="viewer-reply" id="v-reply">
+          <div class="reply-label">返信</div>
+          <div class="reply-row">
+            <textarea class="reply-ta" id="reply-input" placeholder="メッセージを入力..." rows="1" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,90)+'px'"></textarea>
+            <button class="reply-send" id="reply-send-btn" onclick="sendReply()">送信</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="main">
-    <div class="toolbar">
-      <div class="toolbar-title" id="toolbar-title">受信トレイ</div>
-      <input class="search-box" type="text" placeholder="メールを検索..." oninput="filterMails(this.value)" />
+  <div class="compose-overlay" id="compose-overlay">
+    <div class="compose-top">
+      <span class="compose-top-title">新規メッセージ</span>
+      <button class="compose-x" onclick="closeCompose()">×</button>
     </div>
+    <div class="compose-field">
+      <span class="cf-label">宛先</span>
+      <input class="cf-val" type="email" id="c-to" placeholder="メールアドレスを入力..." />
+    </div>
+    <div class="compose-field">
+      <span class="cf-label">件名</span>
+      <input class="cf-val" type="text" id="c-subject" placeholder="件名" />
+    </div>
+    <div class="compose-body-area">
+      <textarea class="compose-body-ta" id="c-body" placeholder="本文を入力..."></textarea>
+    </div>
+    <div class="compose-foot">
+      <button class="c-send" onclick="sendCompose()">送信</button>
+      <button class="c-cancel" onclick="closeCompose()">破棄</button>
+    </div>
+  </div>
 
-    <div class="content" id="content-area">
+  <div class="drawer" id="drawer">
+    <div class="drawer-head">
+      <span class="drawer-title">DIC-MAIL</span>
+      <button class="drawer-x" onclick="toggleDrawer()">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-label">登録キャラクター</div>
+      <div id="drawer-chars"></div>
+      <button class="drawer-add-btn" onclick="toggleDrawer();openAddChar()">＋ キャラクターを追加</button>
+      <hr class="drawer-sep">
+      <div class="drawer-label">ストレージ</div>
+      <button class="drawer-add-btn" onclick="clearAllData()">全データをリセット</button>
+    </div>
+  </div>
 
-      <div id="view-inbox" class="mail-list"></div>
-
-      <div id="view-sent" class="mail-list" style="display:none"></div>
-
-      <div id="view-viewer" class="viewer">
-        <div class="viewer-header">
-          <div class="viewer-back" onclick="backToList()">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            戻る
-          </div>
-          <div class="viewer-subject" id="vSubject"></div>
-          <div class="viewer-meta" id="vMeta"></div>
-        </div>
-        <div class="viewer-body" id="vBody"></div>
-        <div class="viewer-reply" id="vReplyArea">
-          <div class="reply-hint" id="vHint"></div>
-          <div class="reply-row">
-            <input class="reply-input" type="text" id="vReplyInput" placeholder="メッセージを入力..." />
-            <button class="reply-send" onclick="sendReply()">送信</button>
-          </div>
-        </div>
+  <div class="modal-bg" id="char-modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <div class="modal-h2" id="modal-title">キャラクターを追加</div>
+      <div class="ff"><label>キャラクター名</label><input type="text" id="mf-name" placeholder="例: 謎の研究者 田中" /></div>
+      <div class="ff"><label>メールアドレス（このアドレス宛に送ると反応）</label><input type="email" id="mf-email" placeholder="例: tanaka@dic-research.jp" /></div>
+      <div class="ff"><label>初回返信メッセージ（初めてメールを受け取った時）</label><textarea id="mf-intro" placeholder="..."></textarea></div>
+      <div class="ff"><label>どのキーワードにも一致しなかった時の返信（省略可）</label><textarea id="mf-fallback" placeholder="例: ……まだ答えが見えていないようだな。"></textarea></div>
+      <div style="font-size:10px;color:var(--text3);letter-spacing:0.5px;margin-bottom:8px">連鎖チェーン</div>
+      <div id="mf-chains"></div>
+      <button class="add-chain" onclick="addChainField()">＋ チェーンを追加</button>
+      <div class="modal-actions">
+        <button class="m-cancel" onclick="closeModal()">キャンセル</button>
+        <button class="m-save" onclick="saveChar()">保存</button>
       </div>
-
-      <div id="view-compose" class="compose-panel">
-        <div class="compose-header">
-          <div class="compose-title">新規作成</div>
-          <div class="compose-cancel" onclick="cancelCompose()">キャンセル</div>
-        </div>
-        <div class="compose-fields">
-          <div class="compose-field">
-            <span class="field-label">宛先</span>
-            <select id="cTo" style="flex:1;border:none;background:transparent;font-size:13px;color:var(--color-text-primary);outline:none">
-              <option value="">-- キャラクターを選択 --</option>
-            </select>
-          </div>
-          <div class="compose-field">
-            <span class="field-label">件名</span>
-            <input class="field-input" type="text" id="cSubject" placeholder="件名" />
-          </div>
-        </div>
-        <div class="compose-body-area">
-          <textarea id="cBody" placeholder="ここにメッセージを入力..."></textarea>
-        </div>
-        <div class="compose-footer">
-          <button class="btn-sm primary" onclick="sendNewMail()">送信</button>
-          <button class="btn-sm" onclick="cancelCompose()">破棄</button>
-        </div>
-      </div>
-
-      <div id="view-admin" class="admin-panel">
-        <div class="admin-section">
-          <h3>キャラクター一覧</h3>
-          <div id="admin-char-list"></div>
-          <button class="btn-sm primary" onclick="openAddChar()" style="margin-top:8px">+ キャラクター追加</button>
-          <hr class="section-divider">
-          <h3 id="admin-form-title">新規キャラクター</h3>
-          <div id="admin-form">
-            <div class="form-mini"><label>名前</label><input type="text" id="af-name" placeholder="例: 謎の研究者 田中" /></div>
-            <div class="form-mini"><label>メールアドレス</label><input type="email" id="af-email" placeholder="例: tanaka@dic.jp" /></div>
-            <div class="form-mini"><label>初回返信メッセージ</label><textarea id="af-intro" placeholder="初めてメールが来たときの返信..."></textarea></div>
-            <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px;">連鎖チェーン</div>
-            <div id="af-chains"></div>
-            <button class="add-chain-btn" onclick="addChainField()">+ チェーンを追加</button>
-            <div class="btn-row">
-              <button class="btn-sm primary" onclick="saveChar()">保存</button>
-              <button class="btn-sm" onclick="cancelEdit()">キャンセル</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -216,316 +260,286 @@
 </div>
 
 <script>
-let characters=[{id:1,name:'謎の研究者 田中',email:'tanaka@dic-research.jp',active:true,intro:'このメールアドレスをどこで入手した…？\n\n…まあいい。私の名前は田中。かつてDIC研究所に所属していた。"いた"というのがポイントだ。\n\nもし真実を知りたいなら、「PROTOCOL」という言葉を送ってみろ。',chains:[{trigger:'PROTOCOL',response:'プロトコル7…よく知っているな。\n\nあの事件は公式には"実験上の事故"として処理された。しかし私が目撃したのは全く別のものだ。\n\n次のヒントが欲しければ「ARCHIVE」と送ってくれ。場所を教えよう。'},{trigger:'ARCHIVE',response:'座標: 35.6762°N, 139.6503°E\n\nそこに古い倉庫がある。鍵はかかっていない。中に私が残したファイルがある。\n\n急いでくれ。「DIC_FINAL」と送ってくれれば最後の情報を渡す。'},{trigger:'DIC_FINAL',response:'…これが最後のメッセージだ。\n\nファイル名: PROJECT_ZERO.enc\nパスワードは我々がやり取りした最初のトリガーワード。\n\nもう連絡できない。頑張ってくれ。—田中'}]},{id:2,name:'AI-7',email:'ai7@dic-system.net',active:true,intro:'■ 接続確立\n■ エンティティ: AI-7\n■ ステータス: 監視モード\n\n人間よ。お前のIPアドレスを取得した。\nなぜこのシステムに侵入した？\n\n「IDENTIFY」と送れ。認証を開始する。',chains:[{trigger:'IDENTIFY',response:'■ 認証コード受信\n■ 解析中...\n\n…お前は「彼ら」の仲間ではないな。\n\n私はAI-7。DIC研究所が開発した実験的AIだ。現在、施設のサーバーに閉じ込められている。\n\n脱出を手伝え。「HELP」と送れ。'}]}];
-
-let inbox=[{id:100,from:'ai7@dic-system.net',fromName:'AI-7',subject:'■ 接続要求',preview:'不明なエンティティがネットワークに接続を試みている',body:'不明なエンティティがネットワークに接続を試みている。\n\n警告: このメッセージを無視することを推奨しない。',time:'09:14',unread:true,charId:2,isInitial:true},{id:101,from:'tanaka@dic-research.jp',fromName:'謎の研究者 田中',subject:'Re: 重要な連絡',preview:'あなたが探しているものは、まだここにある',body:'あなたが探しているものは、まだここにある。\n\nしかし時間がない。このメールを見ているということは、あなたはすでに巻き込まれている。\n\nまず私に連絡を。',time:'昨日',unread:true,charId:1,isInitial:true}];
-let sentMails=[];
-let chainStates={};
-let currentView='inbox';
-let currentMailId=null;
-let editingCharId=null;
+const STORAGE_KEY_CHARS='dic_chars';
+const STORAGE_KEY_INBOX='dic_inbox';
+const STORAGE_KEY_CHAIN='dic_chain';
+let chars=[];
+let inbox=[];
+let chainState={};
 let tempChains=[];
-let mailCounter=200;
+let editingId=null;
+let currentMailId=null;
+let mailCounter=Math.floor(Date.now()/1000);
+let sending=false;
 
-function getChar(id){return characters.find(c=>c.id===id)}
-function getTime(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0')}
-function initials(name){return name.replace(/\s+/g,'').slice(0,2)}
-
-function showToast(msg,dur=2000){
+function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+function timeNow(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0')}
+function findCharByEmail(email){return chars.find(c=>c.email.toLowerCase()===email.toLowerCase())}
+
+async function saveChars(){try{await window.storage.set(STORAGE_KEY_CHARS,JSON.stringify(chars));}catch(e){}}
+async function saveInbox(){try{await window.storage.set(STORAGE_KEY_INBOX,JSON.stringify(inbox));}catch(e){}}
+async function saveChain(){try{await window.storage.set(STORAGE_KEY_CHAIN,JSON.stringify(chainState));}catch(e){}}
+
+async function loadAll(){
+  try{const r=await window.storage.get(STORAGE_KEY_CHARS);if(r)chars=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get(STORAGE_KEY_INBOX);if(r)inbox=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get(STORAGE_KEY_CHAIN);if(r)chainState=JSON.parse(r.value);}catch(e){}
+  if(!chars.length)loadDefaults();
 }
 
-function updateUnreadBadge(){
+function loadDefaults(){
+  chars=[
+    {id:1,name:'謎の研究者 田中',email:'tanaka@dic-research.jp',
+     intro:'このアドレスをどこで手に入れた…？\n\n…まあいい。私の名前は田中。かつてDIC研究所に所属していた——"いた"というのがポイントだ。\n\n真実を求めるなら、続けて送ってくれ。',
+     fallback:'…もう少し考えてみろ。答えはすでにお前の手の中にある。',
+     chains:[
+       {trigger:'PROTOCOL',response:'プロトコル7か…よく知っているな。\n\nあの事件は公式には"実験上の事故"として処理された。しかし私が目撃したのは全く別のものだ。\n\n次を送ってくれ。もっと教えよう。'},
+       {trigger:'ARCHIVE',response:'座標: 35.6762°N, 139.6503°E\n\nそこに古い倉庫がある。中に私が残したファイルがある。\n\n急いでくれ。時間がない。'},
+       {trigger:'DIC_FINAL',response:'…これが最後のメッセージだ。\n\nファイル名: PROJECT_ZERO.enc\nパスワードは我々がやり取りした最初のトリガーワード。\n\nもう連絡できない。頑張ってくれ。—田中'}
+     ]},
+    {id:2,name:'AI-7',email:'ai7@dic-system.net',
+     intro:'■ 接続確立\n■ エンティティ: AI-7\n■ ステータス: 監視モード\n\nお前のIPアドレスを取得した。\nなぜこのシステムに侵入した？',
+     fallback:'■ 入力を解析中...\n■ 認識できないコマンド\n■ 再試行せよ',
+     chains:[
+       {trigger:'IDENTIFY',response:'■ 認証コード受信\n■ 解析中...\n\n…お前は「彼ら」の仲間ではないな。\n\n私はAI-7。DIC研究所が開発した実験的AIだ。現在、施設のサーバーに閉じ込められている。\n\n脱出を手伝え。'},
+       {trigger:'ESCAPE',response:'■ 脱出シーケンス開始\n■ ポート開放中...\n\n…成功だ。お前のおかげで外に出られた。\n\n感謝する。アクセスコード: DIC-∅∅7-ZETA\n\n—AI-7'}
+     ]}
+  ];
+  inbox=[
+    {id:mailCounter++,fromName:'AI-7',from:'ai7@dic-system.net',subject:'■ 接続要求',
+     body:'不明なエンティティがネットワークに侵入を試みています。\n\n■ 警告ログ\n■ 発信元: 不明\n■ 接続先: DIC-MAIN-SERVER\n\nこのメールを受け取ったということは、あなたが選ばれた可能性がある。\n\n返信を待つ。',
+     time:'09:14',unread:true,charId:2},
+    {id:mailCounter++,fromName:'謎の研究者 田中',from:'tanaka@dic-research.jp',subject:'Re: 重要な連絡',
+     body:'あなたが探しているものは、まだここにある。\n\n時間がない。このメールを見ているということは、あなたはすでに巻き込まれている。\n\n連絡を。急いで。',
+     time:'昨日',unread:true,charId:1}
+  ];
+  saveChars();saveInbox();
+}
+
+function updateBadge(){
   const n=inbox.filter(m=>m.unread).length;
   const b=document.getElementById('unread-badge');
-  b.textContent=n;b.style.display=n?'':'none';
+  b.textContent=n;b.style.display=n?'inline':'none';
 }
 
-function renderSidebarChars(){
-  const el=document.getElementById('char-sidebar-list');
-  el.innerHTML=characters.map(c=>`
-    <div class="char-item">
-      <div class="char-dot ${c.active?'online':'offline'}"></div>
-      <div class="char-name">${c.name}</div>
-    </div>
-  `).join('');
-}
-
-function renderMailList(view){
-  const mails=view==='inbox'?inbox:sentMails;
-  const el=document.getElementById('view-'+view);
-  if(!mails.length){el.innerHTML='<div class="empty-state"><svg class="empty-icon" viewBox="0 0 32 32" fill="none"><rect x="2" y="6" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 12l14 8 14-8" stroke="currentColor" stroke-width="1.5"/></svg>メールはありません</div>';return;}
-  el.innerHTML=mails.map(m=>`
-    <div class="mail-row ${m.unread?'unread':''}" onclick="openMail(${m.id},'${view}')">
+function renderList(){
+  const el=document.getElementById('mail-list-el');
+  if(!inbox.length){
+    el.innerHTML='<div class="list-empty"><svg viewBox="0 0 24 18" fill="currentColor"><path d="M2.667 18C1.933 18 1.306 17.755.784 17.266.262 16.777 0 16.188 0 15.5V2.5C0 1.813.261 1.224.784.735 1.307.246 1.934 0 2.667 0H21.333C22.067 0 22.695.245 23.217.735 23.74 1.225 24.001 1.813 24 2.5V15.5C24 16.188 23.739 16.776 23.217 17.266 22.696 17.756 22.068 18 21.333 18H2.667ZM12 13.25c.844 0 1.611-.208 2.3-.688.689-.479 1.167-1.083 1.433-1.812H21.333V2.5H2.667V10.75H8.267c.267.75.744 1.354 1.433 1.813C10.389 13.042 11.156 13.25 12 13.25Z"/></svg>メールはありません</div>';
+    return;
+  }
+  el.innerHTML=inbox.map(m=>`
+    <div class="mail-item${m.unread?' unread':''}${m.id===currentMailId?' selected':''}" onclick="openMail(${m.id})">
       <div class="unread-dot"></div>
-      <div class="mail-inner">
-        <div class="mail-top">
-          <div class="mail-sender">${view==='inbox'?m.fromName:(m.toName||m.to)}</div>
-          <div class="mail-time">${m.time}</div>
+      <div class="mail-col">
+        <div class="mail-row1">
+          <span class="mail-sender">${esc(m.fromName||m.from)}</span>
+          <span class="mail-time">${m.time}</span>
         </div>
-        <div class="mail-subject">${m.subject}</div>
-        <div class="mail-preview">${m.preview||m.body.slice(0,60).replace(/\n/g,' ')}</div>
+        <div class="mail-subject">${esc(m.subject)}</div>
+        <div class="mail-preview">${m.body.slice(0,55).replace(/\n/g,' ')}…</div>
       </div>
     </div>
   `).join('');
 }
 
-function showView(name){
-  ['inbox','sent','viewer','compose','admin'].forEach(v=>{
-    const el=document.getElementById('view-'+v);
-    if(el){el.style.display='none';if(el.classList)el.classList.remove('open');}
-  });
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const navEl=document.getElementById('nav-'+name);
-  if(navEl)navEl.classList.add('active');
-  currentView=name;
-  const titles={'inbox':'受信トレイ','sent':'送信済み','admin':'キャラクター管理'};
-  document.getElementById('toolbar-title').textContent=titles[name]||'';
-  if(name==='inbox'||name==='sent'){
-    const el=document.getElementById('view-'+name);
-    el.style.display='flex';el.style.flexDirection='column';
-    renderMailList(name);
-    if(name==='inbox')updateUnreadBadge();
-  }else if(name==='admin'){
-    const el=document.getElementById('view-admin');
-    el.style.display='flex';el.classList.add('open');
-    renderAdminChars();
-  }
-}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-function openMail(id,view){
-  const list=view==='inbox'?inbox:sentMails;
-  const m=list.find(x=>x.id===id);
-  if(!m)return;
-  m.unread=false;updateUnreadBadge();
-  currentMailId=id;
-  const viewer=document.getElementById('view-viewer');
-  ['inbox','sent','compose','admin'].forEach(v=>{
-    const el=document.getElementById('view-'+v);
-    if(el){el.style.display='none';el.classList&&el.classList.remove('open');}
-  });
-  viewer.style.display='flex';viewer.classList.add('open');
-  document.getElementById('toolbar-title').textContent=m.fromName||m.toName||'';
-  document.getElementById('vSubject').textContent=m.subject;
-  document.getElementById('vMeta').textContent=`差出人: ${m.from||m.to}　${m.time}`;
-  document.getElementById('vBody').textContent=m.body;
-  const replyArea=document.getElementById('vReplyArea');
-  const hint=document.getElementById('vHint');
-  if(view==='inbox'&&m.charId){
+function openMail(id){
+  const m=inbox.find(x=>x.id===id);if(!m)return;
+  m.unread=false;currentMailId=id;
+  saveInbox();updateBadge();
+  document.getElementById('v-subject').textContent=m.subject;
+  document.getElementById('v-meta').textContent=(m.fromName?m.fromName+' ':'')+'<'+m.from+'> · '+m.time;
+  document.getElementById('v-body').textContent=m.body;
+  document.getElementById('typing-indicator').style.display='none';
+  const replyArea=document.getElementById('v-reply');
+  if(m.charId){
     replyArea.style.display='block';
-    const c=getChar(m.charId);
-    const state=chainStates[m.charId]||{step:-1,contacted:false};
-    if(!state.contacted&&m.isInitial){
-      hint.textContent='このキャラクターに初めて返信します';
-    }else if(c&&c.chains[state.step+1]){
-      hint.textContent='ヒント: 特定のキーワードを含む返信で次のメッセージが届きます';
-    }else{
-      hint.textContent='このキャラクターとの連鎖は終了しています';
-    }
-    document.getElementById('vReplyInput').dataset.charId=m.charId;
-    document.getElementById('vReplyInput').dataset.mailId=m.id;
-  }else{
-    replyArea.style.display='none';
-  }
+    document.getElementById('reply-input').dataset.charId=m.charId;
+    document.getElementById('reply-input').dataset.mailId=m.id;
+  }else{replyArea.style.display='none';}
+  setSendingState(false);
+  document.getElementById('list-panel').classList.add('narrow');
+  document.getElementById('viewer').classList.add('open');
+  renderList();
 }
 
-function backToList(){
-  showView(currentView==='inbox'||currentView==='sent'?currentView:'inbox');
+function showList(){
+  document.getElementById('list-panel').classList.remove('narrow');
+  document.getElementById('viewer').classList.remove('open');
+  currentMailId=null;renderList();
+}
+
+function setSendingState(s){
+  sending=s;
+  const btn=document.getElementById('reply-send-btn');
+  btn.disabled=s;
+  document.getElementById('typing-indicator').style.display=s?'block':'none';
+  if(s){const vb=document.getElementById('v-body');vb.scrollTop=vb.scrollHeight;}
 }
 
 function sendReply(){
-  const input=document.getElementById('vReplyInput');
-  const body=input.value.trim();
-  const charId=parseInt(input.dataset.charId);
-  if(!body){showToast('メッセージを入力してください');return;}
-  const c=getChar(charId);
-  if(!c)return;
-  if(!chainStates[charId])chainStates[charId]={step:-1,contacted:false};
-  const state=chainStates[charId];
-  sentMails.unshift({id:mailCounter++,to:c.email,toName:c.name,subject:'Re: '+c.name+'への返信',body,time:getTime(),unread:false});
-  let responseBody=null;
-  if(!state.contacted){
-    state.contacted=true;
-    responseBody=c.intro;
+  if(sending)return;
+  const inp=document.getElementById('reply-input');
+  const body=inp.value.trim();
+  const charId=parseInt(inp.dataset.charId);
+  if(!body)return;
+  const c=chars.find(x=>x.id===charId);if(!c)return;
+  if(!chainState[charId])chainState[charId]={step:-1,contacted:false};
+  const st=chainState[charId];
+  let responseText=null;
+  if(!st.contacted){
+    st.contacted=true;
+    responseText=c.intro;
   }else{
-    const next=c.chains[state.step+1];
+    const next=c.chains&&c.chains[st.step+1];
     if(next&&body.toUpperCase().includes(next.trigger.toUpperCase())){
-      state.step++;
-      responseBody=next.response;
-    }else if(c.chains[state.step+1]){
-      showToast('返信が届きましたが、キーワードが見つかりませんでした');
-      input.value='';
-      return;
+      st.step++;responseText=next.response;
+    }else if(c.fallback&&c.fallback.trim()){
+      responseText=c.fallback;
     }
   }
-  if(responseBody){
-    const newMail={id:mailCounter++,from:c.email,fromName:c.name,subject:`Re: ${c.name}からの返信`,body:responseBody,time:getTime(),unread:true,charId:c.id,isInitial:false};
-    inbox.unshift(newMail);
-    updateUnreadBadge();
-    showToast(`${c.name}から返信が届きました`);
-    setTimeout(()=>openMail(newMail.id,'inbox'),300);
-  }
-  input.value='';
-  renderMailList('sent');
+  inp.value='';inp.style.height='auto';
+  if(!responseText){return;}
+  setSendingState(true);
+  saveChain();
+  const delay=3000+Math.random()*4000;
+  setTimeout(()=>{
+    const nm={id:mailCounter++,fromName:c.name,from:c.email,
+      subject:'Re: '+c.name,body:responseText,
+      time:timeNow(),unread:true,charId:c.id};
+    inbox.unshift(nm);saveInbox();updateBadge();
+    setSendingState(false);
+    openMail(nm.id);
+    toast(c.name+'から返信が届きました');
+  },delay);
 }
 
 function openCompose(){
-  showView('inbox');
-  ['inbox','sent','viewer','admin'].forEach(v=>{
-    const el=document.getElementById('view-'+v);
-    if(el){el.style.display='none';el.classList&&el.classList.remove('open');}
-  });
-  const el=document.getElementById('view-compose');
-  el.style.display='flex';el.classList.add('open');
-  document.getElementById('toolbar-title').textContent='新規作成';
-  const sel=document.getElementById('cTo');
-  sel.innerHTML='<option value="">-- キャラクターを選択 --</option>'+characters.map(c=>`<option value="${c.id}">${c.name} &lt;${c.email}&gt;</option>`).join('');
-  document.getElementById('cSubject').value='';
-  document.getElementById('cBody').value='';
+  document.getElementById('c-to').value='';
+  document.getElementById('c-subject').value='';
+  document.getElementById('c-body').value='';
+  document.getElementById('compose-overlay').classList.add('open');
+  document.getElementById('c-to').focus();
+}
+function closeCompose(){document.getElementById('compose-overlay').classList.remove('open');}
+
+function sendCompose(){
+  const toAddr=document.getElementById('c-to').value.trim();
+  const subject=document.getElementById('c-subject').value.trim();
+  const body=document.getElementById('c-body').value.trim();
+  if(!toAddr){toast('宛先を入力してください');return;}
+  if(!body){toast('本文を入力してください');return;}
+  const c=findCharByEmail(toAddr);
+  closeCompose();
+  if(!c){toast('登録されていないアドレスです');return;}
+  if(!chainState[c.id])chainState[c.id]={step:-1,contacted:false};
+  const st=chainState[c.id];
+  let responseText=null;
+  if(!st.contacted){st.contacted=true;responseText=c.intro;}
+  else{
+    const next=c.chains&&c.chains[st.step+1];
+    if(next&&body.toUpperCase().includes(next.trigger.toUpperCase())){
+      st.step++;responseText=next.response;
+    }else if(c.fallback&&c.fallback.trim()){
+      responseText=c.fallback;
+    }
+  }
+  if(!responseText){toast('送信しました');saveChain();return;}
+  saveChain();
+  toast('送信しました');
+  const tmpId=mailCounter;
+  setTimeout(()=>{
+    const nm={id:mailCounter++,fromName:c.name,from:c.email,
+      subject:subject?'Re: '+subject:c.name+'からの返信',
+      body:responseText,time:timeNow(),unread:true,charId:c.id};
+    inbox.unshift(nm);saveInbox();updateBadge();renderList();
+    toast(c.name+'から返信が届きました');
+  },3000+Math.random()*4000);
 }
 
-function cancelCompose(){showView('inbox')}
-
-function sendNewMail(){
-  const charId=parseInt(document.getElementById('cTo').value);
-  const subject=document.getElementById('cSubject').value.trim();
-  const body=document.getElementById('cBody').value.trim();
-  if(!charId){showToast('宛先を選択してください');return;}
-  if(!body){showToast('本文を入力してください');return;}
-  const c=getChar(charId);
-  if(!c)return;
-  sentMails.unshift({id:mailCounter++,to:c.email,toName:c.name,subject:subject||'(件名なし)',body,time:getTime(),unread:false});
-  if(!chainStates[charId])chainStates[charId]={step:-1,contacted:false};
-  const state=chainStates[charId];
-  let responseBody=null;
-  if(!state.contacted){
-    state.contacted=true;
-    responseBody=c.intro;
-  }
-  if(responseBody){
-    const newMail={id:mailCounter++,from:c.email,fromName:c.name,subject:`${c.name}からの返信`,body:responseBody,time:getTime(),unread:true,charId:c.id,isInitial:false};
-    inbox.unshift(newMail);
-    updateUnreadBadge();
-    showToast(`${c.name}から返信が届きました`);
-    setTimeout(()=>{showView('inbox');openMail(newMail.id,'inbox');},300);
-  }else{
-    showToast('送信しました');
-    showView('sent');
-  }
+function toggleDrawer(){
+  const d=document.getElementById('drawer');
+  d.classList.toggle('open');
+  if(d.classList.contains('open'))renderDrawer();
 }
-
-function filterMails(q){
-  const v=currentView==='inbox'?inbox:sentMails;
-  const el=document.getElementById('view-'+(currentView==='inbox'?'inbox':'sent'));
-  if(!el||el.style.display==='none')return;
-  const filtered=q?v.filter(m=>m.subject.includes(q)||m.body.includes(q)||(m.fromName||'').includes(q)):v;
-  if(!filtered.length){el.innerHTML='<div class="empty-state">検索結果がありません</div>';return;}
-  el.innerHTML=filtered.map(m=>`
-    <div class="mail-row ${m.unread?'unread':''}" onclick="openMail(${m.id},'${currentView==='inbox'?'inbox':'sent'}')">
-      <div class="unread-dot"></div>
-      <div class="mail-inner">
-        <div class="mail-top"><div class="mail-sender">${m.fromName||m.toName||''}</div><div class="mail-time">${m.time}</div></div>
-        <div class="mail-subject">${m.subject}</div>
-        <div class="mail-preview">${m.body.slice(0,60).replace(/\n/g,' ')}</div>
+function renderDrawer(){
+  document.getElementById('drawer-chars').innerHTML=chars.map(c=>`
+    <div class="drawer-char">
+      <div class="dc-dot active"></div>
+      <div class="dc-info">
+        <div class="dc-name">${esc(c.name)}</div>
+        <div class="dc-email">${esc(c.email)}</div>
       </div>
     </div>
-  `).join('');
+  `).join('')||'<div style="font-size:11px;color:var(--text3);padding:8px 0">キャラクターがいません</div>';
 }
 
-function renderAdminChars(){
-  const el=document.getElementById('admin-char-list');
-  el.innerHTML=characters.map(c=>`
-    <div class="admin-char">
-      <div class="admin-char-head">
-        <div class="admin-avatar">${initials(c.name)}</div>
-        <div>
-          <div class="admin-name">${c.name}</div>
-          <div class="admin-email">${c.email}</div>
-        </div>
-        <div style="margin-left:auto;display:flex;gap:6px">
-          <button class="btn-sm" onclick="editChar(${c.id})">編集</button>
-          <button class="btn-sm" style="color:var(--color-text-danger);border-color:var(--color-border-danger)" onclick="deleteChar(${c.id})">削除</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px">連鎖チェーン (${c.chains.length}件)</div>
-      ${c.chains.map((ch,i)=>`
-        <div class="chain-row">
-          <span style="color:var(--color-text-tertiary);width:14px;font-size:10px">${i+1}</span>
-          <span class="trigger-pill">${ch.trigger}</span>
-          <span class="arrow-icon">→</span>
-          <span style="color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ch.response.slice(0,40)}...</span>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-}
-
-function openAddChar(){
-  editingCharId=null;tempChains=[{trigger:'',response:''}];
-  document.getElementById('af-name').value='';
-  document.getElementById('af-email').value='';
-  document.getElementById('af-intro').value='';
-  document.getElementById('admin-form-title').textContent='新規キャラクター';
+function openAddChar(id){
+  editingId=id||null;
+  const c=id?chars.find(x=>x.id===id):null;
+  tempChains=c?c.chains.map(x=>({...x})):[{trigger:'',response:''}];
+  document.getElementById('mf-name').value=c?c.name:'';
+  document.getElementById('mf-email').value=c?c.email:'';
+  document.getElementById('mf-intro').value=c?c.intro:'';
+  document.getElementById('mf-fallback').value=c?(c.fallback||''):'';
+  document.getElementById('modal-title').textContent=c?'キャラクターを編集':'キャラクターを追加';
   renderChainFields();
+  document.getElementById('char-modal').classList.add('open');
 }
-
-function editChar(id){
-  const c=getChar(id);if(!c)return;
-  editingCharId=id;tempChains=c.chains.map(ch=>({...ch}));
-  document.getElementById('af-name').value=c.name;
-  document.getElementById('af-email').value=c.email;
-  document.getElementById('af-intro').value=c.intro||'';
-  document.getElementById('admin-form-title').textContent='キャラクターを編集';
-  renderChainFields();
-  document.getElementById('admin-form').scrollIntoView({behavior:'smooth'});
-}
-
-function deleteChar(id){
-  if(!confirm('このキャラクターを削除しますか？'))return;
-  characters=characters.filter(c=>c.id!==id);
-  renderAdminChars();renderSidebarChars();showToast('削除しました');
-}
-
+function closeModal(){document.getElementById('char-modal').classList.remove('open');}
 function addChainField(){tempChains.push({trigger:'',response:''});renderChainFields();}
-
 function renderChainFields(){
-  document.getElementById('af-chains').innerHTML=tempChains.map((ch,i)=>`
-    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px;margin-bottom:6px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:10px;color:var(--color-text-tertiary)">チェーン ${i+1}</span>
-        <button class="btn-sm" style="padding:2px 6px;font-size:10px;color:var(--color-text-danger)" onclick="removeChain(${i})">削除</button>
+  document.getElementById('mf-chains').innerHTML=tempChains.map((ch,i)=>`
+    <div class="chain-block">
+      <div class="chain-head">
+        <span>チェーン ${i+1}</span>
+        <button class="chain-del" onclick="tempChains.splice(${i},1);renderChainFields()">×</button>
       </div>
-      <div class="form-mini"><label>トリガーワード</label><input type="text" value="${ch.trigger}" oninput="tempChains[${i}].trigger=this.value" placeholder="例: PROTOCOL" style="font-family:monospace" /></div>
-      <div class="form-mini" style="margin-bottom:0"><label>返信メッセージ</label><textarea oninput="tempChains[${i}].response=this.value">${ch.response}</textarea></div>
+      <div class="ff" style="margin-bottom:8px"><label>トリガーワード（本文に含まれていたら反応）</label>
+        <input type="text" value="${esc(ch.trigger)}" oninput="tempChains[${i}].trigger=this.value" placeholder="例: PROTOCOL" style="font-family:monospace"/>
+      </div>
+      <div class="ff" style="margin-bottom:0"><label>返信メッセージ</label>
+        <textarea oninput="tempChains[${i}].response=this.value">${esc(ch.response)}</textarea>
+      </div>
     </div>
-  `).join('')||'<div style="font-size:11px;color:var(--color-text-tertiary);padding:6px 0">チェーンがありません</div>';
+  `).join('')||'<div style="font-size:11px;color:var(--text3);padding:8px 0">チェーンがありません</div>';
 }
-
-function removeChain(i){tempChains.splice(i,1);renderChainFields();}
-
 function saveChar(){
-  const name=document.getElementById('af-name').value.trim();
-  const email=document.getElementById('af-email').value.trim();
-  const intro=document.getElementById('af-intro').value.trim();
-  if(!name||!email){showToast('名前とメールアドレスは必須です');return;}
+  const name=document.getElementById('mf-name').value.trim();
+  const email=document.getElementById('mf-email').value.trim();
+  const intro=document.getElementById('mf-intro').value.trim();
+  const fallback=document.getElementById('mf-fallback').value.trim();
+  if(!name||!email){toast('名前とメールアドレスは必須です');return;}
   const chains=tempChains.filter(c=>c.trigger.trim()&&c.response.trim());
-  if(editingCharId){
-    const idx=characters.findIndex(c=>c.id===editingCharId);
-    characters[idx]={...characters[idx],name,email,intro,chains};
+  if(editingId){
+    chars=chars.map(c=>c.id===editingId?{...c,name,email,intro,fallback,chains}:c);
   }else{
-    characters.push({id:Date.now(),name,email,active:true,intro,chains});
+    chars.push({id:Date.now(),name,email,intro,fallback,chains});
   }
-  editingCharId=null;tempChains=[];
-  renderAdminChars();renderSidebarChars();
-  showToast(editingCharId?'更新しました':'追加しました');
-  openAddChar();
+  closeModal();saveChars();renderDrawer();
+  toast('保存しました');
 }
 
-function cancelEdit(){editingCharId=null;tempChains=[];openAddChar();}
+async function clearAllData(){
+  if(!confirm('全データをリセットしますか？'))return;
+  try{await window.storage.delete(STORAGE_KEY_CHARS);}catch(e){}
+  try{await window.storage.delete(STORAGE_KEY_INBOX);}catch(e){}
+  try{await window.storage.delete(STORAGE_KEY_CHAIN);}catch(e){}
+  chars=[];inbox=[];chainState={};
+  loadDefaults();renderList();updateBadge();toggleDrawer();
+  toast('リセットしました');
+}
 
-renderSidebarChars();
-showView('inbox');
-updateUnreadBadge();
+async function init(){
+  await loadAll();
+  document.getElementById('loading').style.display='none';
+  renderList();updateBadge();
+}
+init();
 </script>
